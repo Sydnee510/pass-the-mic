@@ -3,3 +3,6 @@ deepgram-sdk
 python-dotenv
 audio-recorder-streamlit
 moviepy
+fastapi
+uvicorn[standard]
+python-multipart

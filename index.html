@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pass the Mic</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --chrome-bg: linear-gradient(160deg, #d8d8dc 0%, #c8c8cc 25%, #b8b8bc 50%, #a8a8ac 75%, #989898 100%);
+    --chrome-surface: rgba(255,255,255,0.55);
+    --chrome-surface-2: rgba(255,255,255,0.35);
+    --chrome-border: rgba(255,255,255,0.7);
+    --chrome-border-2: rgba(255,255,255,0.3);
+    --chrome-shadow: rgba(0,0,0,0.15);
+    --chrome-shadow-deep: rgba(0,0,0,0.25);
+    --text-primary: #0a0a0e;
+    --text-secondary: #444450;
+    --text-muted: #888890;
+    --accent-red: #ff3b30;
+    --accent-blue: #0a84ff;
+    --accent-green: #30d158;
+    --font: 'DM Sans', -apple-system, sans-serif;
+    --mono: 'DM Mono', monospace;
+    --radius: 22px;
+    --radius-sm: 14px;
+    --blur: blur(24px) saturate(200%);
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--chrome-bg);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 40px),
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 40px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -20%;
+    width: 60%;
+    height: 80%;
+    background: radial-gradient(ellipse, rgba(255,255,255,0.18) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .studio-wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  .header {
+    text-align: center;
+    padding: 2rem 0 1.5rem;
+    position: relative;
+  }
+
+  .apple-logo {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    margin-bottom: 1.5rem;
+    opacity: 0.35;
+  }
+
+  .studio-title {
+    font-size: 5.5rem;
+    font-weight: 700;
+    letter-spacing: -0.06em;
+    line-height: 1;
+    color: transparent;
+    background: linear-gradient(180deg, #2a2a30 0%, #6a6a75 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    margin-bottom: 0.6rem;
+  }
+
+  .studio-sub {
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    letter-spacing: -0.01em;
+  }
+
+  .mode-switcher {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0 0.75rem;
+  }
+
+  .mode-track {
+    display: flex;
+    background: rgba(0,0,0,0.08);
+    border-radius: 12px;
+    padding: 3px;
+    gap: 2px;
+    position: relative;
+  }
+
+  .mode-btn {
+    font-family: var(--font);
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 0.45rem 1.3rem;
+    border-radius: 9px;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    background: transparent;
+    transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+    z-index: 1;
+    letter-spacing: 0.01em;
+  }
+
+  .mode-btn.active {
+    background: rgba(255,255,255,0.8);
+    color: var(--text-primary);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12), 0 0.5px 2px rgba(0,0,0,0.08);
+  }
+
+  .pill-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.4rem;
+    margin: 0.75rem 0 2rem;
+    flex-wrap: wrap;
+  }
+
+  .pill {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.28rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(255,255,255,0.6);
+    color: var(--text-secondary);
+    backdrop-filter: blur(12px);
+  }
+
+  .glass {
+    background: rgba(255,255,255,0.5);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    border: 1px solid rgba(255,255,255,0.68);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+  }
+
+  .record-panel {
+    padding: 2.5rem 2.5rem 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .panel-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .waveform-area {
+    background: rgba(0,0,0,0.06);
+    border-radius: 14px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .waveform-bars {
+    display: flex;
+    align-items: center;
+    gap: 2.5px;
+    height: 60px;
+  }
+
+  .wave-bar {
+    width: 3px;
+    border-radius: 2px;
+    background: rgba(0,0,0,0.12);
+    animation: none;
+    transition: height 0.1s;
+  }
+
+  .wave-bar.active {
+    background: var(--accent-red);
+    animation: wavePulse 0.6s ease-in-out infinite alternate;
+  }
+
+  @keyframes wavePulse {
+    from { transform: scaleY(0.3); }
+    to { transform: scaleY(1); }
+  }
+
+  .wave-bar.active:nth-child(2n) { animation-delay: 0.08s; }
+  .wave-bar.active:nth-child(3n) { animation-delay: 0.16s; }
+  .wave-bar.active:nth-child(4n) { animation-delay: 0.24s; }
+  .wave-bar.active:nth-child(5n) { animation-delay: 0.32s; }
+
+  .timer {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    position: absolute;
+    bottom: 10px;
+    right: 14px;
+    letter-spacing: 0.05em;
+  }
+
+  .waveform-placeholder {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-align: center;
+  }
+
+  .controls-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .btn-record {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative;
+    background: var(--accent-red);
+    box-shadow: 0 4px 16px rgba(255,59,48,0.4), 0 1px 4px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+
+  .btn-record:hover { transform: scale(1.06); }
+  .btn-record:active { transform: scale(0.96); }
+
+  .btn-record.recording {
+    animation: recordPulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes recordPulse {
+    0%, 100% { box-shadow: 0 4px 16px rgba(255,59,48,0.4), 0 1px 4px rgba(0,0,0,0.1); }
+    50% { box-shadow: 0 4px 32px rgba(255,59,48,0.7), 0 0 0 10px rgba(255,59,48,0.12); }
+  }
+
+  .btn-record svg { pointer-events: none; }
+
+  .btn-secondary {
+    font-family: var(--font);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.55rem 1.4rem;
+    border-radius: 999px;
+    border: 1px solid rgba(0,0,0,0.1);
+    background: rgba(255,255,255,0.55);
+    color: var(--text-secondary);
+    cursor: pointer;
+    backdrop-filter: blur(12px);
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover { background: rgba(255,255,255,0.8); color: var(--text-primary); }
+  .btn-secondary:disabled { opacity: 0.35; cursor: default; }
+
+  .divider {
+    text-align: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    position: relative;
+    margin: 1.2rem 0;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: calc(50% - 24px);
+    height: 1px;
+    background: rgba(0,0,0,0.08);
+  }
+  .divider::before { left: 0; }
+  .divider::after { right: 0; }
+
+  .upload-zone {
+    border: 2px dashed rgba(0,0,0,0.12);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s;
+    background: rgba(255,255,255,0.25);
+    position: relative;
+  }
+
+  .upload-zone:hover, .upload-zone.drag {
+    border-color: var(--accent-blue);
+    background: rgba(10,132,255,0.04);
+  }
+
+  .upload-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.75rem;
+  }
+
+  .upload-title {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+  }
+
+  .upload-sub {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .upload-zone input[type=file] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .transcript-panel {
+    padding: 2rem 2.5rem;
+    margin-top: 1rem;
+    display: none;
+  }
+
+  .transcript-panel.visible { display: block; }
+
+  .transcript-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+
+  .transcript-title {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .transcript-body {
+    font-size: 1rem;
+    line-height: 1.9;
+    color: var(--text-primary);
+    min-height: 80px;
+  }
+
+  .transcript-body .speaker-tag {
+    font-weight: 700;
+    color: var(--accent-blue);
+    margin-right: 0.3rem;
+  }
+
+  .action-row {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-action {
+    font-family: var(--font);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.55rem 1.3rem;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-dark {
+    background: rgba(10,10,14,0.85);
+    color: white;
+  }
+
+  .btn-dark:hover { background: #000; }
+
+  .btn-light {
+    background: rgba(255,255,255,0.6);
+    color: var(--text-secondary);
+    border: 1px solid rgba(0,0,0,0.1);
+    backdrop-filter: blur(12px);
+  }
+
+  .btn-light:hover { background: rgba(255,255,255,0.9); color: var(--text-primary); }
+
+  .sessions-section { margin-top: 2rem; }
+
+  .section-heading {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+
+  .session-card {
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 0.6rem;
+    transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+    cursor: pointer;
+  }
+
+  .session-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.14), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9) !important;
+  }
+
+  .session-meta {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .session-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+    letter-spacing: -0.01em;
+  }
+
+  .session-preview {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .session-audio {
+    margin-top: 0.5rem;
+  }
+
+  .session-audio audio {
+    width: 100%;
+    height: 32px;
+  }
+
+  .badge {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.06);
+    color: var(--text-muted);
+  }
+
+  .badge.lyrics { background: rgba(255,59,48,0.1); color: var(--accent-red); }
+  .badge.podcast { background: rgba(10,132,255,0.1); color: var(--accent-blue); }
+  .badge.book { background: rgba(48,209,88,0.1); color: #1a8a3a; }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    background: var(--text-muted);
+  }
+  .status-dot.live { background: var(--accent-red); animation: blink 1s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    background: rgba(10,10,14,0.9);
+    color: white;
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    border-radius: 999px;
+    backdrop-filter: blur(20px);
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    z-index: 100;
+    white-space: nowrap;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  .transcribing-bar {
+    display: none;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1.25rem;
+    background: rgba(10,132,255,0.06);
+    border: 1px solid rgba(10,132,255,0.15);
+    border-radius: var(--radius-sm);
+    margin-top: 1rem;
+  }
+
+  .transcribing-bar.visible { display: flex; }
+
+  .ai-dots {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .ai-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent-blue);
+    animation: aiPulse 1.2s ease-in-out infinite;
+  }
+  .ai-dot:nth-child(2) { animation-delay: 0.2s; }
+  .ai-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes aiPulse {
+    0%,60%,100% { opacity: 0.3; transform: scale(0.8); }
+    30% { opacity: 1; transform: scale(1.2); }
+  }
+
+  .ai-text {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--accent-blue);
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
+
+  @media (max-width: 600px) {
+    .studio-title { font-size: 3.5rem; }
+    .record-panel, .transcript-panel { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="studio-wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <svg class="apple-logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <rect x="52" y="18" width="16" height="36" rx="8" fill="#3c3c42"/>
+      <path d="M36 48 Q36 72 60 72 Q84 72 84 48" fill="none" stroke="#3c3c42" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="60" y1="72" x2="60" y2="85" stroke="#3c3c42" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="46" y1="85" x2="74" y2="85" stroke="#3c3c42" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="16" y1="54" x2="16" y2="64" stroke="#3c3c42" stroke-width="3" stroke-linecap="round" opacity="0.45"/>
+      <line x1="25" y1="46" x2="25" y2="72" stroke="#3c3c42" stroke-width="3" stroke-linecap="round" opacity="0.38"/>
+      <line x1="95" y1="46" x2="95" y2="72" stroke="#3c3c42" stroke-width="3" stroke-linecap="round" opacity="0.38"/>
+      <line x1="104" y1="54" x2="104" y2="64" stroke="#3c3c42" stroke-width="3" stroke-linecap="round" opacity="0.45"/>
+    </svg>
+    <div class="studio-title">Pass the Mic</div>
+    <div class="studio-sub">Record. Transcribe. Create.</div>
+  </div>
+
+  <!-- Mode Switcher -->
+  <div class="mode-switcher">
+    <div class="mode-track">
+      <button class="mode-btn active" onclick="setMode('Lyrics')">Lyrics</button>
+      <button class="mode-btn" onclick="setMode('Podcast')">Podcast</button>
+      <button class="mode-btn" onclick="setMode('Book')">Book</button>
+    </div>
+  </div>
+
+  <!-- Pills -->
+  <div class="pill-row" id="pillRow">
+    <span class="pill">Nova-3</span>
+    <span class="pill">Smart Format</span>
+    <span class="pill">Diarization</span>
+  </div>
+
+  <!-- Record Panel -->
+  <div class="glass record-panel">
+    <div class="panel-label">
+      <span class="status-dot" id="statusDot"></span>
+      &nbsp;
+      <span id="panelLabelText">Record a session</span>
+    </div>
+
+    <!-- Waveform -->
+    <div class="waveform-area">
+      <div class="waveform-bars" id="waveBars"></div>
+      <div class="waveform-placeholder" id="wavePlaceholder" style="position:absolute;">
+        <div style="font-size:1.8rem;margin-bottom:0.4rem;opacity:0.25;">&#127908;</div>
+        <div style="font-size:0.78rem;color:var(--text-muted);">Tap the mic to begin recording</div>
+      </div>
+      <div class="timer" id="timer">0:00</div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls-row">
+      <button class="btn-secondary" id="btnReset" onclick="resetRecording()" disabled>Reset</button>
+
+      <button class="btn-record" id="btnRecord" onclick="toggleRecord()" title="Record">
+        <svg id="recIcon" width="22" height="22" viewBox="0 0 24 24" fill="white">
+          <circle cx="12" cy="12" r="8"/>
+        </svg>
+      </button>
+
+      <button class="btn-secondary" id="btnTranscribe" onclick="transcribeRecording()" disabled>Transcribe &rarr;</button>
+    </div>
+
+    <!-- Divider -->
+    <div class="divider" style="margin-top:2rem;">or</div>
+
+    <!-- Upload -->
+    <div class="upload-zone" id="uploadZone">
+      <input type="file" accept=".wav,.mp3,.mp4,.m4a,.flac,.ogg,.webm,.mov,.avi,.mkv" onchange="handleUpload(this)">
+      <div class="upload-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.4)" stroke-width="2" stroke-linecap="round">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+        </svg>
+      </div>
+      <div class="upload-title" id="uploadTitle">Upload a Track</div>
+      <div class="upload-sub">WAV &middot; MP3 &middot; MP4 &middot; M4A &middot; FLAC &middot; OGG &middot; WEBM &middot; MOV</div>
+    </div>
+
+    <!-- AI Transcribing Bar -->
+    <div class="transcribing-bar" id="transcribingBar">
+      <div class="ai-dots">
+        <div class="ai-dot"></div>
+        <div class="ai-dot"></div>
+        <div class="ai-dot"></div>
+      </div>
+      <div class="ai-text">AI is transcribing your audio with Nova-3&hellip;</div>
+    </div>
+  </div>
+
+  <!-- Transcript Panel -->
+  <div class="glass transcript-panel" id="transcriptPanel">
+    <div class="transcript-header">
+      <div class="transcript-title">Transcript</div>
+      <div style="display:flex;gap:0.5rem;">
+        <button class="btn-secondary" onclick="copyTranscript()" style="font-size:0.72rem;padding:0.35rem 0.9rem;">Copy</button>
+      </div>
+    </div>
+    <div class="transcript-body" id="transcriptBody"></div>
+    <div class="action-row">
+      <button class="btn-action btn-dark" onclick="downloadTranscript()">Download Transcript</button>
+      <button class="btn-action btn-light" onclick="saveSession()">Save Session</button>
+    </div>
+  </div>
+
+  <!-- Sessions -->
+  <div class="sessions-section" id="sessionsSection" style="display:none;">
+    <div class="section-heading">Your Sessions</div>
+    <div id="sessionsList"></div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── State ──
+  let currentMode = 'Lyrics';
+  let isRecording = false;
+  let timerInterval = null;
+  let elapsed = 0;
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let recordedBlob = null;
+  let sessions = [];
+
+  // Last transcription result + audio blob for saving
+  let lastResult = null;
+  let lastAudioBlob = null;
+
+  const MODE_PILLS = {
+    Lyrics: ['Nova-3', 'Smart Format', 'Diarization'],
+    Podcast: ['Nova-3', 'Speaker Labels', 'Show Notes'],
+    Book: ['Nova-3', 'Chapters', 'Narrator Mode']
+  };
+
+  const MODE_UPLOAD_LABELS = {
+    Lyrics: 'Upload a Track',
+    Podcast: 'Upload an Episode',
+    Book: 'Upload a Chapter'
+  };
+
+  // ── Mode Switcher ──
+  function setMode(mode) {
+    currentMode = mode;
+    document.querySelectorAll('.mode-btn').forEach(b => {
+      b.classList.toggle('active', b.textContent === mode);
+    });
+    document.getElementById('pillRow').innerHTML =
+      MODE_PILLS[mode].map(p => '<span class="pill">' + p + '</span>').join('');
+    document.getElementById('uploadTitle').textContent = MODE_UPLOAD_LABELS[mode];
+  }
+
+  // ── Waveform ──
+  function buildWaveBars() {
+    const bars = document.getElementById('waveBars');
+    bars.innerHTML = '';
+    for (let i = 0; i < 54; i++) {
+      const bar = document.createElement('div');
+      bar.className = 'wave-bar';
+      bar.style.height = (Math.floor(Math.random() * 48) + 6) + 'px';
+      bars.appendChild(bar);
+    }
+  }
+
+  function animateWave(on) {
+    document.querySelectorAll('.wave-bar').forEach(b => b.classList.toggle('active', on));
+  }
+
+  function updateTimer() {
+    elapsed++;
+    const m = Math.floor(elapsed / 60);
+    const s = elapsed % 60;
+    document.getElementById('timer').textContent = m + ':' + String(s).padStart(2, '0');
+    if (isRecording) {
+      document.querySelectorAll('.wave-bar').forEach(bar => {
+        bar.style.height = (Math.random() * 52 + 6) + 'px';
+      });
+    }
+  }
+
+  // ── Recording (real MediaRecorder) ──
+  function toggleRecord() {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  }
+
+  async function startRecording() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunks = [];
+      mediaRecorder = new MediaRecorder(stream);
+
+      mediaRecorder.ondataavailable = function(e) {
+        if (e.data.size > 0) audioChunks.push(e.data);
+      };
+
+      mediaRecorder.onstop = function() {
+        recordedBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        stream.getTracks().forEach(t => t.stop());
+      };
+
+      mediaRecorder.start();
+      isRecording = true;
+      buildWaveBars();
+      animateWave(true);
+      document.getElementById('wavePlaceholder').style.display = 'none';
+      document.getElementById('btnRecord').classList.add('recording');
+      document.getElementById('recIcon').innerHTML = '<rect x="7" y="7" width="10" height="10" rx="2" fill="white"/>';
+      document.getElementById('statusDot').classList.add('live');
+      document.getElementById('panelLabelText').textContent = 'Recording\u2026';
+      document.getElementById('btnReset').disabled = false;
+      document.getElementById('btnTranscribe').disabled = true;
+      elapsed = 0;
+      timerInterval = setInterval(updateTimer, 1000);
+      showToast('Recording started');
+    } catch (err) {
+      showToast('Microphone access denied');
+    }
+  }
+
+  function stopRecording() {
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+      mediaRecorder.stop();
+    }
+    isRecording = false;
+    clearInterval(timerInterval);
+    animateWave(false);
+    document.getElementById('btnRecord').classList.remove('recording');
+    document.getElementById('recIcon').innerHTML = '<circle cx="12" cy="12" r="8"/>';
+    document.getElementById('statusDot').classList.remove('live');
+    document.getElementById('panelLabelText').textContent = 'Recording complete \u2014 ready to transcribe';
+    document.getElementById('btnTranscribe').disabled = false;
+    showToast('Recording stopped \u00b7 ' + document.getElementById('timer').textContent);
+  }
+
+  function resetRecording() {
+    isRecording = false;
+    clearInterval(timerInterval);
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+      mediaRecorder.stop();
+    }
+    mediaRecorder = null;
+    recordedBlob = null;
+    audioChunks = [];
+    elapsed = 0;
+    document.getElementById('timer').textContent = '0:00';
+    animateWave(false);
+    document.getElementById('wavePlaceholder').style.display = 'block';
+    document.getElementById('btnRecord').classList.remove('recording');
+    document.getElementById('recIcon').innerHTML = '<circle cx="12" cy="12" r="8"/>';
+    document.getElementById('statusDot').classList.remove('live');
+    document.getElementById('panelLabelText').textContent = 'Record a session';
+    document.getElementById('btnReset').disabled = true;
+    document.getElementById('btnTranscribe').disabled = true;
+    document.getElementById('transcriptPanel').classList.remove('visible');
+  }
+
+  // ── Transcribe recorded audio ──
+  async function transcribeRecording() {
+    if (!recordedBlob) {
+      showToast('No recording to transcribe');
+      return;
+    }
+    const bar = document.getElementById('transcribingBar');
+    bar.classList.add('visible');
+    document.getElementById('btnTranscribe').disabled = true;
+
+    const formData = new FormData();
+    formData.append('file', recordedBlob, 'recording.webm');
+    formData.append('mode', currentMode);
+
+    try {
+      const res = await fetch('/transcribe', { method: 'POST', body: formData });
+      const result = await res.json();
+      bar.classList.remove('visible');
+
+      if (result.transcript && result.transcript.trim()) {
+        lastResult = result;
+        lastAudioBlob = recordedBlob;
+        showTranscript(formatTranscript(result));
+      } else {
+        showToast('No speech detected');
+      }
+    } catch (e) {
+      bar.classList.remove('visible');
+      showToast('Transcription failed');
+    }
+  }
+
+  // ── Upload & transcribe file ──
+  async function handleUpload(input) {
+    if (!input.files || !input.files[0]) return;
+    const file = input.files[0];
+    document.getElementById('uploadTitle').textContent = file.name;
+
+    const bar = document.getElementById('transcribingBar');
+    bar.classList.add('visible');
+    buildWaveBars();
+    document.getElementById('wavePlaceholder').style.display = 'none';
+    showToast('Uploading & analyzing\u2026');
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('mode', currentMode);
+
+    try {
+      const res = await fetch('/transcribe', { method: 'POST', body: formData });
+      const result = await res.json();
+      bar.classList.remove('visible');
+
+      if (result.transcript && result.transcript.trim()) {
+        lastResult = result;
+        lastAudioBlob = file;
+        showTranscript(formatTranscript(result));
+      } else {
+        showToast('No speech detected');
+      }
+    } catch (e) {
+      bar.classList.remove('visible');
+      showToast('Upload failed');
+    }
+  }
+
+  // ── Format transcript HTML ──
+  function formatTranscript(result) {
+    if (currentMode === 'Podcast' && result.speakers && result.speakers.length) {
+      return result.speakers.map(function(seg) {
+        return '<p><span class="speaker-tag">Speaker ' + (seg.speaker + 1) + ':</span> ' + escapeHtml(seg.text) + '</p>';
+      }).join('');
+    }
+    if (currentMode === 'Book') {
+      return result.transcript.split('\n\n').map(function(p) {
+        return '<p style="text-indent:2em;">' + escapeHtml(p) + '</p>';
+      }).join('');
+    }
+    return result.transcript.split('\n\n').map(function(p) {
+      return '<p>' + escapeHtml(p) + '</p>';
+    }).join('');
+  }
+
+  function escapeHtml(text) {
+    var div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // ── Show / copy / download transcript ──
+  function showTranscript(html) {
+    document.getElementById('transcriptBody').innerHTML = html;
+    var panel = document.getElementById('transcriptPanel');
+    panel.classList.add('visible');
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    showToast('Transcription complete');
+  }
+
+  function copyTranscript() {
+    var text = document.getElementById('transcriptBody').innerText;
+    navigator.clipboard.writeText(text).catch(function() {});
+    showToast('Copied to clipboard');
+  }
+
+  function downloadTranscript() {
+    var text = document.getElementById('transcriptBody').innerText;
+    var blob = new Blob([text], { type: 'text/plain' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'transcript.txt';
+    a.click();
+    showToast('Downloading transcript\u2026');
+  }
+
+  // ── Save session to server ──
+  async function saveSession() {
+    if (!lastResult || !lastAudioBlob) {
+      showToast('Nothing to save yet');
+      return;
+    }
+    var formData = new FormData();
+    formData.append('file', lastAudioBlob, lastAudioBlob.name || 'recording.webm');
+    formData.append('title', currentMode === 'Lyrics' ? 'Freestyle Session' :
+                             currentMode === 'Podcast' ? 'Episode Recording' : 'Chapter Draft');
+    formData.append('mode', currentMode);
+    formData.append('transcript', lastResult.transcript);
+    formData.append('speakers', JSON.stringify(lastResult.speakers || []));
+
+    try {
+      var res = await fetch('/save', { method: 'POST', body: formData });
+      var data = await res.json();
+      if (data.status === 'saved') {
+        showToast('Session saved');
+        loadSessions();
+      } else {
+        showToast('Save failed');
+      }
+    } catch (e) {
+      showToast('Save failed');
+    }
+  }
+
+  // ── Load & render sessions from server ──
+  async function loadSessions() {
+    try {
+      var res = await fetch('/sessions');
+      sessions = await res.json();
+      renderSessions();
+    } catch (e) {
+      // Server might not be running yet
+    }
+  }
+
+  function renderSessions() {
+    if (sessions.length === 0) {
+      document.getElementById('sessionsSection').style.display = 'none';
+      return;
+    }
+    document.getElementById('sessionsSection').style.display = 'block';
+    document.getElementById('sessionsList').innerHTML = sessions.map(function(s) {
+      var dt = new Date(s.timestamp);
+      var dateStr = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      var timeStr = dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      var mode = s.mode || 'Lyrics';
+      var title = s.title || 'Untitled';
+      var preview = (s.transcript || '').slice(0, 120);
+      if ((s.transcript || '').length > 120) preview += '\u2026';
+
+      var audioHtml = s.audio_file
+        ? '<div class="session-audio"><audio controls preload="none" src="/recordings/' + encodeURIComponent(s.audio_file) + '"></audio></div>'
+        : '';
+
+      return '<div class="glass session-card">' +
+        '<div class="session-meta">' +
+          '<span>' + dateStr + ' &middot; ' + timeStr + '</span>' +
+          '<span class="badge ' + mode.toLowerCase() + '">' + mode + '</span>' +
+        '</div>' +
+        '<div class="session-name">' + escapeHtml(title) + '</div>' +
+        '<div class="session-preview">' + escapeHtml(preview) + '</div>' +
+        audioHtml +
+      '</div>';
+    }).join('');
+  }
+
+  // ── Toast ──
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timeout);
+    t._timeout = setTimeout(function() { t.classList.remove('show'); }, 2500);
+  }
+
+  // ── Drag & drop ──
+  var zone = document.getElementById('uploadZone');
+  zone.addEventListener('dragover', function(e) { e.preventDefault(); zone.classList.add('drag'); });
+  zone.addEventListener('dragleave', function() { zone.classList.remove('drag'); });
+  zone.addEventListener('drop', function(e) { e.preventDefault(); zone.classList.remove('drag'); });
+
+  // ── Init ──
+  buildWaveBars();
+  loadSessions();
+</script>
+</body>
+</html>
