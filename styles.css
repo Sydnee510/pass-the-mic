@@ -1,5 +1,6 @@
 /* ============================================
    Pass the Mic — Chrome Silver MacBook Theme
+   Streamlit Edition
    ============================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap');
@@ -7,9 +8,7 @@
 :root {
     --chrome-bg: linear-gradient(160deg, #d8d8dc 0%, #c8c8cc 25%, #b8b8bc 50%, #a8a8ac 75%, #989898 100%);
     --chrome-surface: rgba(255, 255, 255, 0.55);
-    --chrome-surface-2: rgba(255, 255, 255, 0.35);
     --chrome-border: rgba(255, 255, 255, 0.7);
-    --chrome-border-2: rgba(255, 255, 255, 0.3);
     --text-primary: #0a0a0e;
     --text-secondary: #444450;
     --text-muted: #888890;
@@ -20,10 +19,13 @@
     --mono: 'DM Mono', monospace;
     --radius: 22px;
     --radius-sm: 14px;
-    --blur: blur(24px) saturate(200%);
 }
 
 /* ---- Base ---- */
+.stApp, .stApp > * {
+    font-family: var(--font) !important;
+}
+
 .stApp {
     background: var(--chrome-bg) !important;
     min-height: 100vh;
@@ -57,47 +59,28 @@
 #MainMenu, footer, header,
 [data-testid="stSidebar"],
 .stDeployButton,
-[data-testid="stDecoration"] {
+[data-testid="stDecoration"],
+[data-testid="stToolbar"],
+[data-testid="stStatusWidget"] {
     display: none !important;
 }
 
 /* ============================================
-   Hero
+   Hero — force sizes with !important on every property
    ============================================ */
 .hero {
     text-align: center;
-    padding: 4rem 1rem 0.75rem;
+    padding: 3rem 1rem 0.5rem;
     position: relative;
     z-index: 1;
 }
 
 .hero-logo {
     opacity: 0.35;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     display: block;
     margin-left: auto;
     margin-right: auto;
-}
-
-.hero-title {
-    font-family: var(--font);
-    font-size: 5.5rem;
-    font-weight: 700;
-    line-height: 0.95;
-    margin: 0;
-    letter-spacing: -0.06em;
-    background: linear-gradient(180deg, #2a2a30 0%, #78787e 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.hero-sub {
-    font-family: var(--font);
-    font-size: 1.15rem;
-    font-weight: 400;
-    color: var(--text-secondary);
-    margin-top: 0.75rem;
-    letter-spacing: -0.01em;
 }
 
 /* ============================================
@@ -112,29 +95,36 @@
 }
 
 .pill {
-    font-family: var(--font);
-    font-size: 0.65rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    background: var(--chrome-surface);
-    backdrop-filter: var(--blur);
-    -webkit-backdrop-filter: var(--blur);
-    border: 1px solid var(--chrome-border);
-    padding: 0.3rem 0.85rem;
-    border-radius: 999px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-family: var(--font) !important;
+    font-size: 0.65rem !important;
+    font-weight: 600 !important;
+    color: var(--text-secondary) !important;
+    background: var(--chrome-surface) !important;
+    border: 1px solid var(--chrome-border) !important;
+    padding: 0.3rem 0.85rem !important;
+    border-radius: 999px !important;
+    letter-spacing: 0.06em !important;
+    text-transform: uppercase !important;
+    display: inline-block !important;
 }
 
 /* ============================================
-   Segmented Toggle — iOS frosted glass
+   Segmented Toggle — iOS style
    ============================================ */
-div[data-testid="stRadio"] > div {
+
+/* Hide the label */
+[data-testid="stRadio"] > label,
+[data-testid="stRadio"] > div > label:first-child {
+    display: none !important;
+}
+
+/* The container holding the radio options */
+[data-testid="stRadio"] > div,
+[data-testid="stRadio"] > div > div {
     display: flex !important;
+    flex-direction: row !important;
     gap: 0 !important;
     background: rgba(0, 0, 0, 0.08) !important;
-    backdrop-filter: var(--blur) !important;
-    -webkit-backdrop-filter: var(--blur) !important;
     border: none !important;
     border-radius: 12px !important;
     padding: 4px !important;
@@ -143,74 +133,64 @@ div[data-testid="stRadio"] > div {
     margin: 0 auto !important;
 }
 
-div[data-testid="stRadio"] label {
+/* Each radio option label */
+[data-testid="stRadio"] label[data-baseweb="radio"] {
     font-family: var(--font) !important;
-    font-size: 0.88rem !important;
+    font-size: 0.85rem !important;
     font-weight: 600 !important;
-    padding: 0.5rem 1.5rem !important;
+    padding: 0.45rem 1.4rem !important;
     border-radius: 8px !important;
     cursor: pointer !important;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    color: rgba(255,255,255,0.85) !important;
+    color: var(--text-muted) !important;
     margin: 0 !important;
     white-space: nowrap !important;
     background: transparent !important;
+    border: none !important;
+    display: flex !important;
+    align-items: center !important;
 }
 
-div[data-testid="stRadio"] label[data-checked="true"],
-div[data-testid="stRadio"] label:has(input:checked) {
+/* Active/checked state */
+[data-testid="stRadio"] label[data-baseweb="radio"]:has(input:checked) {
     background: rgba(255, 255, 255, 0.85) !important;
     color: var(--text-primary) !important;
     box-shadow: 0 1px 6px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06) !important;
 }
 
-div[data-testid="stRadio"] input { display: none !important; }
-div[data-testid="stRadio"] label span[data-testid="stMarkdownContainer"] p { color: inherit !important; }
-div[data-testid="stRadio"] > label { display: none !important; }
-/* Aggressively hide ALL radio dot/circle indicators */
-div[data-testid="stRadio"] label > div:first-child { display: none !important; }
-div[data-testid="stRadio"] label svg { display: none !important; }
-div[data-testid="stRadio"] label [data-testid="stRadioOptionIndicator"] { display: none !important; }
-div[data-testid="stRadio"] label > span:first-child { display: none !important; }
-div[data-testid="stRadio"] label div[class*="indicator"] { display: none !important; }
-div[data-testid="stRadio"] label > div[data-testid] { display: none !important; }
+/* Hide ALL radio circles/dots/indicators */
+[data-testid="stRadio"] input[type="radio"] { display: none !important; }
+[data-testid="stRadio"] label svg { display: none !important; }
+[data-testid="stRadio"] label > div:first-child { display: none !important; }
+[data-testid="stRadio"] label > span:first-child:not([data-testid="stMarkdownContainer"]) { display: none !important; }
+[data-testid="stRadio"] [data-testid="stRadioOptionIndicator"] { display: none !important; }
+[data-testid="stRadio"] label div[class*="indicator"] { display: none !important; }
+[data-testid="stRadio"] label > div[data-testid] { display: none !important; }
+[data-testid="stRadio"] label [role="radio"] { display: none !important; }
+
+/* Make the text inherit color */
+[data-testid="stRadio"] label span[data-testid="stMarkdownContainer"] p {
+    color: inherit !important;
+    font-family: var(--font) !important;
+}
 
 /* ============================================
    Section Headers
    ============================================ */
 .section-header {
-    font-family: var(--font);
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 1rem;
-    letter-spacing: -0.03em;
+    font-family: var(--font) !important;
+    font-size: 1.6rem !important;
+    font-weight: 700 !important;
+    color: var(--text-primary) !important;
+    margin-bottom: 1rem !important;
+    letter-spacing: -0.03em !important;
 }
 
 /* ============================================
-   Record Panel — target the st.container
+   Glass Panel — st.container border wrapper
    ============================================ */
-/* The first container inside the main column = our record panel */
-[data-testid="stVerticalBlock"] > [data-testid="stVerticalBlock"]:first-child > div[data-testid="stVerticalBlockBorderWrapper"] {
-    background: rgba(255, 255, 255, 0.52) !important;
-    backdrop-filter: blur(24px) saturate(200%) !important;
-    -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.72) !important;
-    border-radius: var(--radius) !important;
-    box-shadow:
-        0 8px 40px rgba(0, 0, 0, 0.1),
-        0 2px 8px rgba(0, 0, 0, 0.06),
-        inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
-    padding: 2.5rem 2.5rem 2rem !important;
-    position: relative;
-    z-index: 1;
-}
-
-/* Fallback: style any st.container border wrapper as the glass panel */
 div[data-testid="stVerticalBlockBorderWrapper"] {
     background: rgba(255, 255, 255, 0.52) !important;
-    backdrop-filter: blur(24px) saturate(200%) !important;
-    -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
     border: 1px solid rgba(255, 255, 255, 0.72) !important;
     border-radius: var(--radius) !important;
     box-shadow:
@@ -218,19 +198,21 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
         0 2px 8px rgba(0, 0, 0, 0.06),
         inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
     padding: 2rem !important;
+    position: relative;
+    z-index: 1;
 }
 
 .panel-label {
-    font-family: var(--font);
-    font-size: 0.68rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--text-muted);
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    font-family: var(--font) !important;
+    font-size: 0.68rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.14em !important;
+    color: var(--text-muted) !important;
+    margin-bottom: 1.5rem !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
 }
 
 .status-dot {
@@ -288,17 +270,17 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .waveform-placeholder-text {
-    font-family: var(--font);
-    font-size: 0.78rem;
-    color: var(--text-muted);
+    font-family: var(--font) !important;
+    font-size: 0.78rem !important;
+    color: var(--text-muted) !important;
     text-align: center;
 }
 
 .timer {
-    font-family: var(--mono);
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--text-muted);
+    font-family: var(--mono) !important;
+    font-size: 0.8rem !important;
+    font-weight: 500 !important;
+    color: var(--text-muted) !important;
     position: absolute;
     bottom: 12px;
     right: 16px;
@@ -306,59 +288,47 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 /* ============================================
-   Controls Row — Reset / Record / Transcribe
+   Controls Row
    ============================================ */
-.controls-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1.5rem;
-    margin-bottom: 0.5rem;
-}
-
 .btn-secondary {
-    font-family: var(--font);
-    font-size: 0.8rem;
-    font-weight: 600;
-    padding: 0.55rem 1.4rem;
-    border-radius: 999px;
-    border: none;
-    background: rgba(255, 255, 255, 0.55);
-    color: var(--text-muted);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    font-family: var(--font) !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    padding: 0.55rem 1.4rem !important;
+    border-radius: 999px !important;
+    border: none !important;
+    background: rgba(255, 255, 255, 0.55) !important;
+    color: var(--text-muted) !important;
     cursor: default;
     opacity: 0.5;
 }
 
 .btn-transcribe {
-    font-family: var(--font);
-    font-size: 0.8rem;
-    font-weight: 600;
-    padding: 0.55rem 1.4rem;
-    border-radius: 999px;
-    border: none;
-    background: rgba(255, 255, 255, 0.55);
-    color: var(--text-muted);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    font-family: var(--font) !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    padding: 0.55rem 1.4rem !important;
+    border-radius: 999px !important;
+    border: none !important;
+    background: rgba(255, 255, 255, 0.55) !important;
+    color: var(--text-muted) !important;
     cursor: default;
     opacity: 0.5;
 }
 
 /* ============================================
-   Mic Recorder — override the black bar
+   Mic Recorder — contain the iframe blob
    ============================================ */
-[data-testid="stAudioRecorder"] {
-    display: flex;
-    justify-content: center;
+[data-testid="stAudioRecorder"],
+[data-testid="stCustomComponentV1"] {
+    display: flex !important;
+    justify-content: center !important;
 }
 
-/* The audio recorder is an iframe — style the iframe container */
-[data-testid="stAudioRecorder"],
-iframe[title*="audio_recorder"] {
-    max-width: 80px !important;
-    max-height: 80px !important;
+[data-testid="stAudioRecorder"] iframe,
+[data-testid="stCustomComponentV1"] iframe {
+    max-width: 72px !important;
+    max-height: 72px !important;
     margin: 0 auto !important;
     display: block !important;
     border: none !important;
@@ -367,13 +337,8 @@ iframe[title*="audio_recorder"] {
     border-radius: 50% !important;
 }
 
-@keyframes recordPulse {
-    0%, 100% { box-shadow: 0 4px 16px rgba(255,59,48,0.4), 0 1px 4px rgba(0,0,0,0.1); }
-    50% { box-shadow: 0 4px 32px rgba(255,59,48,0.7), 0 0 0 10px rgba(255,59,48,0.12); }
-}
-
 /* ============================================
-   Upload Zone — mockup style
+   Upload Zone
    ============================================ */
 .upload-zone-wrapper {
     border: 2px dashed rgba(0, 0, 0, 0.12);
@@ -402,27 +367,25 @@ iframe[title*="audio_recorder"] {
 }
 
 .upload-title {
-    font-family: var(--font);
-    font-size: 0.92rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 0.25rem;
+    font-family: var(--font) !important;
+    font-size: 0.92rem !important;
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+    margin-bottom: 0.25rem !important;
 }
 
 .upload-formats {
-    font-family: var(--font);
-    font-size: 0.75rem;
-    font-weight: 400;
-    color: var(--text-muted);
-    margin-bottom: 0.75rem;
+    font-family: var(--font) !important;
+    font-size: 0.75rem !important;
+    font-weight: 400 !important;
+    color: var(--text-muted) !important;
+    margin-bottom: 0.75rem !important;
 }
 
-/* Hide Streamlit uploader default styling — make it blend into our zone */
-/* Hide ALL default uploader styling — make it invisible except the clickable area */
+/* Hide Streamlit uploader default styling */
 [data-testid="stFileUploader"] {
     background: transparent !important;
     border: none !important;
-    border-radius: 0 !important;
     padding: 0 !important;
     margin: 0 !important;
 }
@@ -438,7 +401,6 @@ iframe[title*="audio_recorder"] {
     padding: 0 !important;
 }
 
-/* Hide the dark "Drag and drop" inner bar */
 [data-testid="stFileUploader"] [data-testid="stFileUploaderDropzone"] {
     background: transparent !important;
     border: none !important;
@@ -449,14 +411,12 @@ iframe[title*="audio_recorder"] {
     background: transparent !important;
 }
 
-/* Hide the "Drag and drop file here" text and file limit text */
 [data-testid="stFileUploader"] [data-testid="stFileUploaderDropzone"] span,
 [data-testid="stFileUploader"] [data-testid="stFileUploaderDropzone"] small,
 [data-testid="stFileUploader"] [data-testid="stFileUploaderDropzone"] > div > div:first-child {
     display: none !important;
 }
 
-/* Style the Browse button to be subtle */
 [data-testid="stFileUploader"] [data-testid="stFileUploaderDropzone"] button,
 [data-testid="stFileUploader"] [data-testid="baseButton-secondary"] {
     font-family: var(--font) !important;
@@ -467,7 +427,6 @@ iframe[title*="audio_recorder"] {
     color: var(--text-secondary) !important;
     border: 1px solid rgba(0, 0, 0, 0.1) !important;
     padding: 0.4rem 1.2rem !important;
-    backdrop-filter: blur(12px) !important;
 }
 
 [data-testid="stFileUploader"] small {
@@ -479,11 +438,11 @@ iframe[title*="audio_recorder"] {
    ============================================ */
 .divider {
     text-align: center;
-    color: var(--text-muted);
-    font-family: var(--font);
-    font-size: 0.65rem;
-    font-weight: 700;
-    margin: 2rem 0;
+    color: var(--text-muted) !important;
+    font-family: var(--font) !important;
+    font-size: 0.65rem !important;
+    font-weight: 700 !important;
+    margin: 2rem 0 !important;
     position: relative;
     text-transform: uppercase;
     letter-spacing: 0.2em;
@@ -512,10 +471,10 @@ iframe[title*="audio_recorder"] {
     border-radius: var(--radius-sm);
     padding: 0.85rem 1.25rem;
     margin: 1rem 0;
-    font-family: var(--font);
-    font-size: 0.82rem;
-    font-weight: 500;
-    color: var(--accent-blue);
+    font-family: var(--font) !important;
+    font-size: 0.82rem !important;
+    font-weight: 500 !important;
+    color: var(--accent-blue) !important;
 }
 
 .ai-dots {
@@ -543,8 +502,6 @@ iframe[title*="audio_recorder"] {
    ============================================ */
 .transcript-card {
     background: var(--chrome-surface);
-    backdrop-filter: var(--blur);
-    -webkit-backdrop-filter: var(--blur);
     border: 1px solid var(--chrome-border);
     border-radius: var(--radius);
     padding: 2rem 2.5rem;
@@ -556,63 +513,61 @@ iframe[title*="audio_recorder"] {
 }
 
 .transcript-card h3 {
-    font-family: var(--font);
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--text-muted);
-    margin-bottom: 1.25rem;
+    font-family: var(--font) !important;
+    font-size: 0.65rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.12em !important;
+    color: var(--text-muted) !important;
+    margin-bottom: 1.25rem !important;
 }
 
 .transcript-card p {
-    font-family: var(--font);
-    font-size: 1.05rem;
-    line-height: 1.85;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
+    font-family: var(--font) !important;
+    font-size: 1.05rem !important;
+    line-height: 1.85 !important;
+    color: var(--text-primary) !important;
+    margin-bottom: 0.5rem !important;
 }
 
 .speaker-label {
-    color: var(--accent-blue);
-    font-weight: 600;
-    margin-right: 0.35rem;
+    color: var(--accent-blue) !important;
+    font-weight: 600 !important;
+    margin-right: 0.35rem !important;
 }
 
 .book-para {
-    font-family: var(--font);
-    font-size: 1.05rem;
-    line-height: 2;
-    color: var(--text-primary);
-    text-indent: 2em;
-    margin-bottom: 0.75rem;
+    font-family: var(--font) !important;
+    font-size: 1.05rem !important;
+    line-height: 2 !important;
+    color: var(--text-primary) !important;
+    text-indent: 2em !important;
+    margin-bottom: 0.75rem !important;
 }
 
 /* ============================================
    Mode Badges
    ============================================ */
 .badge {
-    font-family: var(--font);
-    font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    padding: 0.2rem 0.6rem;
-    border-radius: 999px;
-    display: inline-block;
+    font-family: var(--font) !important;
+    font-size: 0.6rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.06em !important;
+    text-transform: uppercase !important;
+    padding: 0.2rem 0.6rem !important;
+    border-radius: 999px !important;
+    display: inline-block !important;
 }
 
-.badge.lyrics  { background: rgba(255,59,48,0.1);  color: var(--accent-red); }
-.badge.podcast { background: rgba(10,132,255,0.1); color: var(--accent-blue); }
-.badge.book    { background: rgba(48,209,88,0.1);  color: #1a8a3a; }
+.badge.lyrics  { background: rgba(255,59,48,0.1) !important;  color: var(--accent-red) !important; }
+.badge.podcast { background: rgba(10,132,255,0.1) !important; color: var(--accent-blue) !important; }
+.badge.book    { background: rgba(48,209,88,0.1) !important;  color: #1a8a3a !important; }
 
 /* ============================================
    Session Cards
    ============================================ */
 .session-card {
     background: var(--chrome-surface);
-    backdrop-filter: var(--blur);
-    -webkit-backdrop-filter: var(--blur);
     border: 1px solid var(--chrome-border);
     border-radius: var(--radius-sm);
     padding: 1.25rem 1.5rem;
@@ -633,28 +588,28 @@ iframe[title*="audio_recorder"] {
 }
 
 .session-date {
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    font-weight: 500;
+    font-family: var(--mono) !important;
+    font-size: 0.68rem !important;
+    color: var(--text-muted) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    font-weight: 500 !important;
 }
 
 .session-title {
-    font-family: var(--font);
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin: 0.35rem 0;
-    letter-spacing: -0.01em;
+    font-family: var(--font) !important;
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+    margin: 0.35rem 0 !important;
+    letter-spacing: -0.01em !important;
 }
 
 .session-preview {
-    font-family: var(--font);
-    font-size: 0.88rem;
-    color: var(--text-secondary);
-    line-height: 1.55;
+    font-family: var(--font) !important;
+    font-size: 0.88rem !important;
+    color: var(--text-secondary) !important;
+    line-height: 1.55 !important;
 }
 
 .session-tags {
@@ -665,19 +620,19 @@ iframe[title*="audio_recorder"] {
 }
 
 .session-tag {
-    font-family: var(--font);
-    font-size: 0.6rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    background: rgba(0,0,0,0.04);
-    padding: 0.2rem 0.6rem;
-    border-radius: 999px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+    font-family: var(--font) !important;
+    font-size: 0.6rem !important;
+    font-weight: 600 !important;
+    color: var(--text-secondary) !important;
+    background: rgba(0,0,0,0.04) !important;
+    padding: 0.2rem 0.6rem !important;
+    border-radius: 999px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
 }
 
 /* ============================================
-   Bottom Notch (home indicator)
+   Bottom Notch
    ============================================ */
 .bottom-notch {
     display: flex;
@@ -697,15 +652,14 @@ iframe[title*="audio_recorder"] {
 /* ============================================
    Streamlit Widget Overrides
    ============================================ */
-.stButton > button {
+.stButton > button,
+button[data-testid="baseButton-secondary"] {
     font-family: var(--font) !important;
     font-weight: 600 !important;
     font-size: 0.8rem !important;
     border-radius: 999px !important;
     border: 1px solid rgba(0,0,0,0.1) !important;
     background: rgba(255,255,255,0.55) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
     color: var(--text-primary) !important;
     padding: 0.55rem 1.3rem !important;
     transition: all 0.2s !important;
@@ -732,12 +686,14 @@ iframe[title*="audio_recorder"] {
     background: #000 !important;
 }
 
-.stTextInput > div > div > input,
-.stNumberInput > div > div > input,
-.stTextArea > div > div > textarea {
+/* Text inputs */
+.stTextInput input,
+.stNumberInput input,
+.stTextArea textarea,
+[data-testid="stTextInput"] input,
+[data-testid="stNumberInput"] input,
+[data-testid="stTextArea"] textarea {
     background: rgba(255,255,255,0.5) !important;
-    backdrop-filter: var(--blur) !important;
-    -webkit-backdrop-filter: var(--blur) !important;
     border: 1px solid rgba(0,0,0,0.06) !important;
     border-radius: var(--radius-sm) !important;
     color: var(--text-primary) !important;
@@ -746,14 +702,20 @@ iframe[title*="audio_recorder"] {
     padding: 0.65rem 1rem !important;
 }
 
-.stTextInput > div > div > input:focus,
-.stTextArea > div > div > textarea:focus {
+.stTextInput input:focus,
+.stTextArea textarea:focus,
+[data-testid="stTextInput"] input:focus,
+[data-testid="stTextArea"] textarea:focus {
     border-color: var(--accent-blue) !important;
     box-shadow: 0 0 0 3px rgba(10,132,255,0.1) !important;
 }
 
+/* Labels */
 .stTextInput > label, .stTextArea > label,
-.stNumberInput > label, .stFileUploader > label {
+.stNumberInput > label, .stFileUploader > label,
+[data-testid="stTextInput"] > label,
+[data-testid="stNumberInput"] > label,
+[data-testid="stTextArea"] > label {
     font-family: var(--font) !important;
     color: var(--text-secondary) !important;
     font-weight: 500 !important;
@@ -765,9 +727,8 @@ iframe[title*="audio_recorder"] {
     font-family: var(--font) !important;
 }
 
-.stAlert {
+.stAlert, [data-testid="stAlert"] {
     background: var(--chrome-surface) !important;
-    backdrop-filter: var(--blur) !important;
     border: 1px solid var(--chrome-border) !important;
     border-radius: var(--radius-sm) !important;
 }
@@ -778,17 +739,22 @@ iframe[title*="audio_recorder"] {
     font-size: 0.78rem !important;
 }
 
+/* Audio player */
+.stAudio, [data-testid="stAudio"] {
+    border-radius: 12px !important;
+    overflow: hidden !important;
+}
+
+/* Spinner */
+.stSpinner > div {
+    border-top-color: var(--accent-blue) !important;
+}
+
 /* ============================================
    Responsive
    ============================================ */
 @media (max-width: 768px) {
-    .hero-title { font-size: 4rem; }
-    .hero-sub { font-size: 1rem; }
     .record-panel { padding: 1.5rem; }
     .transcript-card { padding: 1.5rem; }
-    .section-header { font-size: 1.3rem; }
-}
-
-@media (max-width: 600px) {
-    .hero-title { font-size: 3rem; }
+    .section-header { font-size: 1.3rem !important; }
 }

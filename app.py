@@ -29,13 +29,15 @@ st.markdown("""
         <line x1="95" y1="46" x2="95" y2="72" stroke="#3c3c42" stroke-width="3" stroke-linecap="round" opacity="0.38"/>
         <line x1="104" y1="54" x2="104" y2="64" stroke="#3c3c42" stroke-width="3" stroke-linecap="round" opacity="0.45"/>
     </svg>
-    <p class="hero-title">Pass the Mic</p>
-    <p class="hero-sub">Record. Transcribe. Create.</p>
+    <div style="font-family:'DM Sans',-apple-system,sans-serif;font-size:5.5rem;font-weight:700;line-height:0.95;margin:0;letter-spacing:-0.06em;background:linear-gradient(180deg,#2a2a30 0%,#78787e 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Pass the Mic</div>
+    <div style="font-family:'DM Sans',-apple-system,sans-serif;font-size:1.15rem;font-weight:400;color:#444450;margin-top:0.75rem;letter-spacing:-0.01em;">Record. Transcribe. Create.</div>
 </div>
 """, unsafe_allow_html=True)
 
 # --- Mode Toggle ---
-mode = st.radio("Mode", ["Lyrics", "Podcast", "Book"], horizontal=True, label_visibility="collapsed")
+_, toggle_col, _ = st.columns([1, 2, 1])
+with toggle_col:
+    mode = st.radio("Mode", ["Lyrics", "Podcast", "Book"], horizontal=True, label_visibility="collapsed")
 
 if mode == "Lyrics":
     sub = "Spit your bars, read your poems, or freestyle — we'll catch every word."
