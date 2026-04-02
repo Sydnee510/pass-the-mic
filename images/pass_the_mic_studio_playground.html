@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --chrome-bg: linear-gradient(160deg, #d8d8dc 0%, #c8c8cc 25%, #b8b8bc 50%, #a8a8ac 75%, #989898 100%);
+    --chrome-surface: rgba(255,255,255,0.55);
+    --chrome-surface-2: rgba(255,255,255,0.35);
+    --chrome-border: rgba(255,255,255,0.7);
+    --chrome-border-2: rgba(255,255,255,0.3);
+    --chrome-shadow: rgba(0,0,0,0.15);
+    --chrome-shadow-deep: rgba(0,0,0,0.25);
+    --text-primary: #0a0a0e;
+    --text-secondary: #444450;
+    --text-muted: #888890;
+    --accent-red: #ff3b30;
+    --accent-blue: #0a84ff;
+    --accent-green: #30d158;
+    --font: 'DM Sans', -apple-system, sans-serif;
+    --mono: 'DM Mono', monospace;
+    --radius: 22px;
+    --radius-sm: 14px;
+    --blur: blur(24px) saturate(200%);
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--chrome-bg);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 40px),
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 40px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -20%;
+    width: 60%;
+    height: 80%;
+    background: radial-gradient(ellipse, rgba(255,255,255,0.18) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .studio-wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  /* ── MacBook Notch Header ── */
+  .header {
+    text-align: center;
+    padding: 2rem 0 1.5rem;
+    position: relative;
+  }
+
+  .apple-logo {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    margin-bottom: 1.5rem;
+    opacity: 0.35;
+  }
+
+  .studio-title {
+    font-size: 5.5rem;
+    font-weight: 700;
+    letter-spacing: -0.06em;
+    line-height: 1;
+    color: transparent;
+    background: linear-gradient(180deg, #2a2a30 0%, #6a6a75 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    margin-bottom: 0.6rem;
+  }
+
+  .studio-sub {
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    letter-spacing: -0.01em;
+  }
+
+  /* ── Mode Switcher ── */
+  .mode-switcher {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0 0.75rem;
+  }
+
+  .mode-track {
+    display: flex;
+    background: rgba(0,0,0,0.08);
+    border-radius: 12px;
+    padding: 3px;
+    gap: 2px;
+    position: relative;
+  }
+
+  .mode-btn {
+    font-family: var(--font);
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 0.45rem 1.3rem;
+    border-radius: 9px;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    background: transparent;
+    transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+    z-index: 1;
+    letter-spacing: 0.01em;
+  }
+
+  .mode-btn.active {
+    background: rgba(255,255,255,0.8);
+    color: var(--text-primary);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12), 0 0.5px 2px rgba(0,0,0,0.08);
+  }
+
+  /* ── Pill Tags ── */
+  .pill-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.4rem;
+    margin: 0.75rem 0 2rem;
+    flex-wrap: wrap;
+  }
+
+  .pill {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.28rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(255,255,255,0.6);
+    color: var(--text-secondary);
+    backdrop-filter: blur(12px);
+  }
+
+  /* ── Glass Panel ── */
+  .glass {
+    background: rgba(255,255,255,0.5);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    border: 1px solid rgba(255,255,255,0.68);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+  }
+
+  /* ── Recording Panel ── */
+  .record-panel {
+    padding: 2.5rem 2.5rem 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .panel-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  /* ── Waveform Display ── */
+  .waveform-area {
+    background: rgba(0,0,0,0.06);
+    border-radius: 14px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .waveform-bars {
+    display: flex;
+    align-items: center;
+    gap: 2.5px;
+    height: 60px;
+  }
+
+  .wave-bar {
+    width: 3px;
+    border-radius: 2px;
+    background: rgba(0,0,0,0.12);
+    animation: none;
+    transition: height 0.1s;
+  }
+
+  .wave-bar.active {
+    background: var(--accent-red);
+    animation: wavePulse 0.6s ease-in-out infinite alternate;
+  }
+
+  @keyframes wavePulse {
+    from { transform: scaleY(0.3); }
+    to { transform: scaleY(1); }
+  }
+
+  .wave-bar.active:nth-child(2n) { animation-delay: 0.08s; }
+  .wave-bar.active:nth-child(3n) { animation-delay: 0.16s; }
+  .wave-bar.active:nth-child(4n) { animation-delay: 0.24s; }
+  .wave-bar.active:nth-child(5n) { animation-delay: 0.32s; }
+
+  .timer {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    position: absolute;
+    bottom: 10px;
+    right: 14px;
+    letter-spacing: 0.05em;
+  }
+
+  .waveform-placeholder {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-align: center;
+  }
+
+  /* ── Controls ── */
+  .controls-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .btn-record {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative;
+    background: var(--accent-red);
+    box-shadow: 0 4px 16px rgba(255,59,48,0.4), 0 1px 4px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+
+  .btn-record:hover { transform: scale(1.06); }
+  .btn-record:active { transform: scale(0.96); }
+
+  .btn-record.recording {
+    animation: recordPulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes recordPulse {
+    0%, 100% { box-shadow: 0 4px 16px rgba(255,59,48,0.4), 0 1px 4px rgba(0,0,0,0.1); }
+    50% { box-shadow: 0 4px 32px rgba(255,59,48,0.7), 0 0 0 10px rgba(255,59,48,0.12); }
+  }
+
+  .btn-record svg { pointer-events: none; }
+
+  .btn-secondary {
+    font-family: var(--font);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.55rem 1.4rem;
+    border-radius: 999px;
+    border: 1px solid rgba(0,0,0,0.1);
+    background: rgba(255,255,255,0.55);
+    color: var(--text-secondary);
+    cursor: pointer;
+    backdrop-filter: blur(12px);
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover { background: rgba(255,255,255,0.8); color: var(--text-primary); }
+  .btn-secondary:disabled { opacity: 0.35; cursor: default; }
+
+  /* ── Divider ── */
+  .divider {
+    text-align: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    position: relative;
+    margin: 1.2rem 0;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: calc(50% - 24px);
+    height: 1px;
+    background: rgba(0,0,0,0.08);
+  }
+  .divider::before { left: 0; }
+  .divider::after { right: 0; }
+
+  /* ── Upload Zone ── */
+  .upload-zone {
+    border: 2px dashed rgba(0,0,0,0.12);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s;
+    background: rgba(255,255,255,0.25);
+    position: relative;
+  }
+
+  .upload-zone:hover, .upload-zone.drag {
+    border-color: var(--accent-blue);
+    background: rgba(10,132,255,0.04);
+  }
+
+  .upload-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.75rem;
+  }
+
+  .upload-title {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+  }
+
+  .upload-sub {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .upload-zone input[type=file] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  /* ── Transcript Panel ── */
+  .transcript-panel {
+    padding: 2rem 2.5rem;
+    margin-top: 1rem;
+    display: none;
+  }
+
+  .transcript-panel.visible { display: block; }
+
+  .transcript-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+
+  .transcript-title {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .transcript-body {
+    font-size: 1rem;
+    line-height: 1.9;
+    color: var(--text-primary);
+    min-height: 80px;
+  }
+
+  .transcript-body .speaker-tag {
+    font-weight: 700;
+    color: var(--accent-blue);
+    margin-right: 0.3rem;
+  }
+
+  /* ── Action Buttons Row ── */
+  .action-row {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-action {
+    font-family: var(--font);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.55rem 1.3rem;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-dark {
+    background: rgba(10,10,14,0.85);
+    color: white;
+  }
+
+  .btn-dark:hover { background: #000; }
+
+  .btn-light {
+    background: rgba(255,255,255,0.6);
+    color: var(--text-secondary);
+    border: 1px solid rgba(0,0,0,0.1);
+    backdrop-filter: blur(12px);
+  }
+
+  .btn-light:hover { background: rgba(255,255,255,0.9); color: var(--text-primary); }
+
+  /* ── Sessions List ── */
+  .sessions-section { margin-top: 2rem; }
+
+  .section-heading {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+
+  .session-card {
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 0.6rem;
+    transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+    cursor: pointer;
+  }
+
+  .session-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.14), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9) !important;
+  }
+
+  .session-meta {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .session-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+    letter-spacing: -0.01em;
+  }
+
+  .session-preview {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .badge {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.06);
+    color: var(--text-muted);
+  }
+
+  .badge.lyrics { background: rgba(255,59,48,0.1); color: var(--accent-red); }
+  .badge.podcast { background: rgba(10,132,255,0.1); color: var(--accent-blue); }
+  .badge.book { background: rgba(48,209,88,0.1); color: #1a8a3a; }
+
+  /* ── Status indicator ── */
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    background: var(--text-muted);
+  }
+  .status-dot.live { background: var(--accent-red); animation: blink 1s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  /* ── Notification toast ── */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    background: rgba(10,10,14,0.9);
+    color: white;
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    border-radius: 999px;
+    backdrop-filter: blur(20px);
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    z-index: 100;
+    white-space: nowrap;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ── AI Transcribing Animation ── */
+  .transcribing-bar {
+    display: none;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1.25rem;
+    background: rgba(10,132,255,0.06);
+    border: 1px solid rgba(10,132,255,0.15);
+    border-radius: var(--radius-sm);
+    margin-top: 1rem;
+  }
+
+  .transcribing-bar.visible { display: flex; }
+
+  .ai-dots {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .ai-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent-blue);
+    animation: aiPulse 1.2s ease-in-out infinite;
+  }
+  .ai-dot:nth-child(2) { animation-delay: 0.2s; }
+  .ai-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes aiPulse {
+    0%,60%,100% { opacity: 0.3; transform: scale(0.8); }
+    30% { opacity: 1; transform: scale(1.2); }
+  }
+
+  .ai-text {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--accent-blue);
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
+
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    .studio-title { font-size: 3.5rem; }
+    .record-panel, .transcript-panel { padding: 1.5rem; }
+  }
+</style>
+
+<div class="studio-wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <svg class="apple-logo" viewBox="0 0 28 34" fill="none">
+      <path d="M23.5 18.1c0-4.2 3.4-6.2 3.6-6.3-2-2.9-5-3.3-6.1-3.3-2.6-.3-5 1.5-6.3 1.5-1.3 0-3.3-1.5-5.4-1.4-2.8 0-5.3 1.6-6.8 4.1-2.9 5-0.7 12.4 2.1 16.4 1.4 2 3 4.2 5.1 4.1 2-.1 2.8-1.3 5.3-1.3 2.4 0 3.1 1.3 5.3 1.3 2.2 0 3.6-2 5-4 1.6-2.3 2.2-4.5 2.2-4.6-.1 0-4-1.6-4-6.5zM19.4 5.8c1.1-1.4 1.9-3.3 1.7-5.3-1.6.1-3.6 1.1-4.8 2.5-1 1.2-2 3.1-1.7 5 1.8.1 3.6-.9 4.8-2.2z" fill="currentColor"/>
+    </svg>
+    <div class="studio-title">Pass the Mic</div>
+    <div class="studio-sub">Record. Transcribe. Create.</div>
+  </div>
+
+  <!-- Mode Switcher -->
+  <div class="mode-switcher">
+    <div class="mode-track">
+      <button class="mode-btn active" onclick="setMode('Lyrics')">Lyrics</button>
+      <button class="mode-btn" onclick="setMode('Podcast')">Podcast</button>
+      <button class="mode-btn" onclick="setMode('Book')">Book</button>
+    </div>
+  </div>
+
+  <!-- Pills -->
+  <div class="pill-row" id="pillRow">
+    <span class="pill">Nova-3</span>
+    <span class="pill">Smart Format</span>
+    <span class="pill">Diarization</span>
+  </div>
+
+  <!-- Record Panel -->
+  <div class="glass record-panel">
+    <div class="panel-label">
+      <span class="status-dot" id="statusDot"></span>
+      &nbsp;
+      <span id="panelLabelText">Record a session</span>
+    </div>
+
+    <!-- Waveform -->
+    <div class="waveform-area">
+      <div class="waveform-bars" id="waveBars"></div>
+      <div class="waveform-placeholder" id="wavePlaceholder" style="position:absolute;">
+        <div style="font-size:1.8rem;margin-bottom:0.4rem;opacity:0.25;">🎙</div>
+        <div style="font-size:0.78rem;color:var(--text-muted);">Tap the mic to begin recording</div>
+      </div>
+      <div class="timer" id="timer">0:00</div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls-row">
+      <button class="btn-secondary" id="btnReset" onclick="resetRecording()" disabled>Reset</button>
+
+      <button class="btn-record" id="btnRecord" onclick="toggleRecord()" title="Record">
+        <svg id="recIcon" width="22" height="22" viewBox="0 0 24 24" fill="white">
+          <circle cx="12" cy="12" r="8"/>
+        </svg>
+      </button>
+
+      <button class="btn-secondary" id="btnTranscribe" onclick="mockTranscribe()" disabled>Transcribe →</button>
+    </div>
+
+    <!-- Divider -->
+    <div class="divider" style="margin-top:2rem;">or</div>
+
+    <!-- Upload -->
+    <div class="upload-zone" id="uploadZone">
+      <input type="file" accept="audio/*,video/*" onchange="handleUpload(this)">
+      <div class="upload-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.4)" stroke-width="2" stroke-linecap="round">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+        </svg>
+      </div>
+      <div class="upload-title" id="uploadTitle">Upload a Track</div>
+      <div class="upload-sub">WAV · MP3 · MP4 · M4A · FLAC · OGG · WEBM · MOV</div>
+    </div>
+
+    <!-- AI Transcribing Bar -->
+    <div class="transcribing-bar" id="transcribingBar">
+      <div class="ai-dots">
+        <div class="ai-dot"></div>
+        <div class="ai-dot"></div>
+        <div class="ai-dot"></div>
+      </div>
+      <div class="ai-text">AI is transcribing your audio with Nova-3…</div>
+    </div>
+  </div>
+
+  <!-- Transcript Panel -->
+  <div class="glass transcript-panel" id="transcriptPanel">
+    <div class="transcript-header">
+      <div class="transcript-title">Transcript</div>
+      <div style="display:flex;gap:0.5rem;">
+        <button class="btn-secondary" onclick="copyTranscript()" style="font-size:0.72rem;padding:0.35rem 0.9rem;">Copy</button>
+      </div>
+    </div>
+    <div class="transcript-body" id="transcriptBody"></div>
+    <div class="action-row">
+      <button class="btn-action btn-dark" onclick="downloadTranscript()">Download Transcript</button>
+      <button class="btn-action btn-light" onclick="saveSession()">Save Session</button>
+    </div>
+  </div>
+
+  <!-- Sessions -->
+  <div class="sessions-section" id="sessionsSection" style="display:none;">
+    <div class="section-heading">Your Sessions</div>
+    <div id="sessionsList"></div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  let currentMode = 'Lyrics';
+  let isRecording = false;
+  let recordInterval = null;
+  let timerInterval = null;
+  let elapsed = 0;
+  let sessions = JSON.parse(localStorage.getItem('ptm_sessions') || '[]');
+
+  const DEMO_TRANSCRIPTS = {
+    Lyrics: `<p>I stand at the edge of everything I know,<br>where shadows meet the afterglow.<br>These words I wrote at 2 a.m. alone,<br>now echo back like seeds you've sown.</p><p>The rhythm finds me where I breathe,<br>between the lines of what I believe.<br>Pass the mic, let the silence break —<br>this verse is mine. This truth I make.</p>`,
+    Podcast: `<p><span class="speaker-tag">Host:</span> Welcome back to another episode. Today we're diving deep into the creative process — what does it actually take to ship something you're proud of?</p><p><span class="speaker-tag">Guest:</span> Honestly? It starts with lowering the bar just enough to begin. Most people wait for perfect conditions. I've learned to start ugly.</p><p><span class="speaker-tag">Host:</span> That's such a good reframe. The "start ugly" philosophy. Tell me more.</p>`,
+    Book: `<p>Chapter One: The Space Between Words</p><p>There is a particular kind of silence that lives inside a recording studio — not the absence of sound, but the presence of potential. Every surface has been treated to absorb the stray, the accidental, the unwanted. What remains is only what you intend.</p><p>I came to understand this silence the summer I turned twenty-three, sitting in a booth not much larger than a closet, learning that the voice I'd carried my entire life was, in fact, a stranger.</p>`
+  };
+
+  const MODE_PILLS = {
+    Lyrics: ['Nova-3', 'Smart Format', 'Diarization'],
+    Podcast: ['Nova-3', 'Speaker Labels', 'Show Notes'],
+    Book: ['Nova-3', 'Chapters', 'Narrator Mode']
+  };
+
+  const MODE_UPLOAD_LABELS = {
+    Lyrics: 'Upload a Track',
+    Podcast: 'Upload an Episode',
+    Book: 'Upload a Chapter'
+  };
+
+  function setMode(mode) {
+    currentMode = mode;
+    document.querySelectorAll('.mode-btn').forEach((b, i) => {
+      b.classList.toggle('active', b.textContent === mode);
+    });
+    const pills = MODE_PILLS[mode];
+    document.getElementById('pillRow').innerHTML = pills.map(p => `<span class="pill">${p}</span>`).join('');
+    document.getElementById('uploadTitle').textContent = MODE_UPLOAD_LABELS[mode];
+  }
+
+  function buildWaveBars() {
+    const bars = document.getElementById('waveBars');
+    bars.innerHTML = '';
+    const count = 54;
+    const heights = Array.from({length: count}, () => Math.floor(Math.random() * 48 + 6));
+    heights.forEach(h => {
+      const bar = document.createElement('div');
+      bar.className = 'wave-bar';
+      bar.style.height = h + 'px';
+      bars.appendChild(bar);
+    });
+  }
+
+  function animateWave(on) {
+    const bars = document.querySelectorAll('.wave-bar');
+    bars.forEach(b => b.classList.toggle('active', on));
+  }
+
+  function updateTimer() {
+    elapsed++;
+    const m = Math.floor(elapsed / 60);
+    const s = elapsed % 60;
+    document.getElementById('timer').textContent = m + ':' + String(s).padStart(2,'0');
+    if (isRecording) {
+      const bars = document.querySelectorAll('.wave-bar');
+      bars.forEach(bar => {
+        bar.style.height = (Math.random() * 52 + 6) + 'px';
+      });
+    }
+  }
+
+  function toggleRecord() {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  }
+
+  function startRecording() {
+    isRecording = true;
+    buildWaveBars();
+    animateWave(true);
+    document.getElementById('wavePlaceholder').style.display = 'none';
+    document.getElementById('btnRecord').classList.add('recording');
+    document.getElementById('recIcon').innerHTML = '<rect x="7" y="7" width="10" height="10" rx="2" fill="white"/>';
+    document.getElementById('statusDot').classList.add('live');
+    document.getElementById('panelLabelText').textContent = 'Recording…';
+    document.getElementById('btnReset').disabled = false;
+    document.getElementById('btnTranscribe').disabled = true;
+    elapsed = 0;
+    timerInterval = setInterval(updateTimer, 1000);
+    showToast('Recording started');
+  }
+
+  function stopRecording() {
+    isRecording = false;
+    clearInterval(timerInterval);
+    animateWave(false);
+    document.getElementById('btnRecord').classList.remove('recording');
+    document.getElementById('recIcon').innerHTML = '<circle cx="12" cy="12" r="8"/>';
+    document.getElementById('statusDot').classList.remove('live');
+    document.getElementById('panelLabelText').textContent = 'Recording complete — ready to transcribe';
+    document.getElementById('btnTranscribe').disabled = false;
+    showToast('Recording stopped · ' + document.getElementById('timer').textContent);
+  }
+
+  function resetRecording() {
+    isRecording = false;
+    clearInterval(timerInterval);
+    elapsed = 0;
+    document.getElementById('timer').textContent = '0:00';
+    animateWave(false);
+    document.getElementById('wavePlaceholder').style.display = 'block';
+    document.getElementById('btnRecord').classList.remove('recording');
+    document.getElementById('recIcon').innerHTML = '<circle cx="12" cy="12" r="8"/>';
+    document.getElementById('statusDot').classList.remove('live');
+    document.getElementById('panelLabelText').textContent = 'Record a session';
+    document.getElementById('btnReset').disabled = true;
+    document.getElementById('btnTranscribe').disabled = true;
+    document.getElementById('transcriptPanel').classList.remove('visible');
+  }
+
+  function mockTranscribe() {
+    const bar = document.getElementById('transcribingBar');
+    bar.classList.add('visible');
+    document.getElementById('btnTranscribe').disabled = true;
+
+    setTimeout(() => {
+      bar.classList.remove('visible');
+      showTranscript(DEMO_TRANSCRIPTS[currentMode]);
+    }, 2200);
+  }
+
+  function handleUpload(input) {
+    if (!input.files || !input.files[0]) return;
+    const file = input.files[0];
+    const zone = document.getElementById('uploadZone');
+    zone.querySelector('.upload-title').textContent = file.name;
+    const bar = document.getElementById('transcribingBar');
+    bar.classList.add('visible');
+    document.getElementById('wavePlaceholder').style.display = 'none';
+    buildWaveBars();
+    showToast('Uploading & analyzing audio…');
+    setTimeout(() => {
+      bar.classList.remove('visible');
+      showTranscript(DEMO_TRANSCRIPTS[currentMode]);
+    }, 2800);
+  }
+
+  function showTranscript(html) {
+    document.getElementById('transcriptBody').innerHTML = html;
+    const panel = document.getElementById('transcriptPanel');
+    panel.classList.add('visible');
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    showToast('Transcription complete');
+  }
+
+  function copyTranscript() {
+    const text = document.getElementById('transcriptBody').innerText;
+    navigator.clipboard.writeText(text).catch(() => {});
+    showToast('Copied to clipboard');
+  }
+
+  function downloadTranscript() {
+    const text = document.getElementById('transcriptBody').innerText;
+    const blob = new Blob([text], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'transcript.txt';
+    a.click();
+    showToast('Downloading transcript…');
+  }
+
+  function saveSession() {
+    const preview = document.getElementById('transcriptBody').innerText.slice(0, 120) + '…';
+    const session = {
+      id: Date.now(),
+      mode: currentMode,
+      title: currentMode === 'Lyrics' ? 'Freestyle Session' : currentMode === 'Podcast' ? 'Episode Recording' : 'Chapter Draft',
+      preview,
+      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      duration: document.getElementById('timer').textContent
+    };
+    sessions.unshift(session);
+    try { localStorage.setItem('ptm_sessions', JSON.stringify(sessions)); } catch(e) {}
+    renderSessions();
+    showToast('Session saved');
+  }
+
+  function renderSessions() {
+    if (sessions.length === 0) return;
+    document.getElementById('sessionsSection').style.display = 'block';
+    document.getElementById('sessionsList').innerHTML = sessions.map(s => `
+      <div class="glass session-card">
+        <div class="session-meta">
+          <span>${s.date}</span>
+          <span>·</span>
+          <span>${s.duration || '–'}</span>
+          <span class="badge ${s.mode.toLowerCase()}">${s.mode}</span>
+        </div>
+        <div class="session-name">${s.title}</div>
+        <div class="session-preview">${s.preview}</div>
+      </div>
+    `).join('');
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timeout);
+    t._timeout = setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  // Drag-over upload zone
+  const zone = document.getElementById('uploadZone');
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+  zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag'); });
+
+  // Init
+  buildWaveBars();
+  renderSessions();
+</script>

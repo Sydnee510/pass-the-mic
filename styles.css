@@ -1,0 +1,654 @@
+/* ============================================
+   Pass the Mic — Chrome Silver MacBook Theme
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --chrome-bg: linear-gradient(160deg, #d8d8dc 0%, #c8c8cc 25%, #b8b8bc 50%, #a8a8ac 75%, #989898 100%);
+    --chrome-surface: rgba(255, 255, 255, 0.55);
+    --chrome-surface-2: rgba(255, 255, 255, 0.35);
+    --chrome-border: rgba(255, 255, 255, 0.7);
+    --chrome-border-2: rgba(255, 255, 255, 0.3);
+    --text-primary: #0a0a0e;
+    --text-secondary: #444450;
+    --text-muted: #888890;
+    --accent-red: #ff3b30;
+    --accent-blue: #0a84ff;
+    --accent-green: #30d158;
+    --font: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: 'DM Mono', monospace;
+    --radius: 22px;
+    --radius-sm: 14px;
+    --blur: blur(24px) saturate(200%);
+}
+
+/* ---- Base ---- */
+.stApp {
+    background: var(--chrome-bg) !important;
+    min-height: 100vh;
+    position: relative;
+}
+
+.stApp::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 40px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 40px);
+    z-index: 0;
+}
+
+.stApp::after {
+    content: '';
+    position: fixed;
+    top: -25%;
+    left: -15%;
+    width: 65%;
+    height: 65%;
+    background: radial-gradient(circle, rgba(255,255,255,0.22) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Kill Streamlit chrome */
+#MainMenu, footer, header,
+[data-testid="stSidebar"],
+.stDeployButton,
+[data-testid="stDecoration"] {
+    display: none !important;
+}
+
+/* ============================================
+   Hero
+   ============================================ */
+.hero {
+    text-align: center;
+    padding: 4rem 1rem 0.75rem;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-logo {
+    opacity: 0.35;
+    margin-bottom: 1.5rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-title {
+    font-family: var(--font);
+    font-size: 5.5rem;
+    font-weight: 700;
+    line-height: 0.95;
+    margin: 0;
+    letter-spacing: -0.06em;
+    background: linear-gradient(180deg, #2a2a30 0%, #78787e 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-sub {
+    font-family: var(--font);
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin-top: 0.75rem;
+    letter-spacing: -0.01em;
+}
+
+/* ============================================
+   Pill Badges
+   ============================================ */
+.pills {
+    display: flex;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.pill {
+    font-family: var(--font);
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: var(--chrome-surface);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    border: 1px solid var(--chrome-border);
+    padding: 0.3rem 0.85rem;
+    border-radius: 999px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+/* ============================================
+   Segmented Toggle — iOS frosted glass
+   ============================================ */
+div[data-testid="stRadio"] > div {
+    display: flex !important;
+    gap: 0 !important;
+    background: rgba(0, 0, 0, 0.08) !important;
+    backdrop-filter: var(--blur) !important;
+    -webkit-backdrop-filter: var(--blur) !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 4px !important;
+    justify-content: center !important;
+    width: fit-content !important;
+    margin: 0 auto !important;
+}
+
+div[data-testid="stRadio"] label {
+    font-family: var(--font) !important;
+    font-size: 0.88rem !important;
+    font-weight: 600 !important;
+    padding: 0.5rem 1.5rem !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    color: rgba(255,255,255,0.85) !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+    background: transparent !important;
+}
+
+div[data-testid="stRadio"] label[data-checked="true"],
+div[data-testid="stRadio"] label:has(input:checked) {
+    background: rgba(255, 255, 255, 0.85) !important;
+    color: var(--text-primary) !important;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06) !important;
+}
+
+div[data-testid="stRadio"] input { display: none !important; }
+div[data-testid="stRadio"] label span[data-testid="stMarkdownContainer"] p { color: inherit !important; }
+div[data-testid="stRadio"] > label { display: none !important; }
+
+/* ============================================
+   Section Headers
+   ============================================ */
+.section-header {
+    font-family: var(--font);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    letter-spacing: -0.03em;
+}
+
+/* ============================================
+   Record Panel — frosted glass card
+   ============================================ */
+.record-panel {
+    background: rgba(255, 255, 255, 0.52);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    border-radius: var(--radius);
+    box-shadow:
+        0 8px 40px rgba(0, 0, 0, 0.1),
+        0 2px 8px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    padding: 2.5rem 2.5rem 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.panel-label {
+    font-family: var(--font);
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    display: inline-block;
+}
+
+.status-dot.live {
+    background: var(--accent-red);
+    animation: blink 1s ease-in-out infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* ============================================
+   Waveform Display Area
+   ============================================ */
+.waveform-area {
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 14px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.waveform-placeholder {
+    font-family: var(--font);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.timer {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    position: absolute;
+    bottom: 10px;
+    right: 14px;
+    letter-spacing: 0.05em;
+}
+
+/* ============================================
+   Controls Row
+   ============================================ */
+.controls-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+/* ============================================
+   Mic Recorder
+   ============================================ */
+[data-testid="stAudioRecorder"] {
+    display: flex;
+    justify-content: center;
+}
+
+@keyframes recordPulse {
+    0%, 100% { box-shadow: 0 4px 16px rgba(255,59,48,0.4), 0 1px 4px rgba(0,0,0,0.1); }
+    50% { box-shadow: 0 4px 32px rgba(255,59,48,0.7), 0 0 0 10px rgba(255,59,48,0.12); }
+}
+
+/* ============================================
+   Upload Zone
+   ============================================ */
+.upload-zone-label {
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.upload-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.75rem;
+}
+
+.upload-title {
+    font-family: var(--font);
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.upload-formats {
+    font-family: var(--font);
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--text-muted);
+}
+
+[data-testid="stFileUploader"] {
+    background: rgba(255, 255, 255, 0.25) !important;
+    border: 2px dashed rgba(0, 0, 0, 0.12) !important;
+    border-radius: 16px !important;
+    padding: 1.5rem !important;
+    transition: all 0.25s !important;
+}
+
+[data-testid="stFileUploader"]:hover {
+    border-color: var(--accent-blue) !important;
+    background: rgba(10, 132, 255, 0.04) !important;
+}
+
+/* ============================================
+   Divider
+   ============================================ */
+.divider {
+    text-align: center;
+    color: var(--text-muted);
+    font-family: var(--font);
+    font-size: 0.65rem;
+    font-weight: 700;
+    margin: 2rem 0;
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+}
+
+.divider::before, .divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 42%;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.06);
+}
+.divider::before { left: 0; }
+.divider::after { right: 0; }
+
+/* ============================================
+   AI Transcribing Indicator
+   ============================================ */
+.ai-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: rgba(10, 132, 255, 0.06);
+    border: 1px solid rgba(10, 132, 255, 0.15);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem 1.25rem;
+    margin: 1rem 0;
+    font-family: var(--font);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--accent-blue);
+}
+
+.ai-dots {
+    display: flex;
+    gap: 4px;
+}
+
+.ai-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-blue);
+    animation: aiPulse 1.2s ease-in-out infinite;
+}
+.ai-dot:nth-child(2) { animation-delay: 0.2s; }
+.ai-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes aiPulse {
+    0%, 100% { opacity: 0.3; transform: scale(0.85); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+/* ============================================
+   Transcript Card
+   ============================================ */
+.transcript-card {
+    background: var(--chrome-surface);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    border: 1px solid var(--chrome-border);
+    border-radius: var(--radius);
+    padding: 2rem 2.5rem;
+    margin-top: 1.5rem;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.08),
+        0 2px 8px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.transcript-card h3 {
+    font-family: var(--font);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+}
+
+.transcript-card p {
+    font-family: var(--font);
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.speaker-label {
+    color: var(--accent-blue);
+    font-weight: 600;
+    margin-right: 0.35rem;
+}
+
+.book-para {
+    font-family: var(--font);
+    font-size: 1.05rem;
+    line-height: 2;
+    color: var(--text-primary);
+    text-indent: 2em;
+    margin-bottom: 0.75rem;
+}
+
+/* ============================================
+   Mode Badges
+   ============================================ */
+.badge {
+    font-family: var(--font);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    display: inline-block;
+}
+
+.badge.lyrics  { background: rgba(255,59,48,0.1);  color: var(--accent-red); }
+.badge.podcast { background: rgba(10,132,255,0.1); color: var(--accent-blue); }
+.badge.book    { background: rgba(48,209,88,0.1);  color: #1a8a3a; }
+
+/* ============================================
+   Session Cards
+   ============================================ */
+.session-card {
+    background: var(--chrome-surface);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    border: 1px solid var(--chrome-border);
+    border-radius: var(--radius-sm);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 0.75rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow:
+        0 4px 16px rgba(0,0,0,0.06),
+        0 1px 4px rgba(0,0,0,0.04),
+        inset 0 1px 0 rgba(255,255,255,0.8);
+}
+
+.session-card:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 12px 40px rgba(0,0,0,0.14),
+        0 4px 12px rgba(0,0,0,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+}
+
+.session-date {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 500;
+}
+
+.session-title {
+    font-family: var(--font);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0.35rem 0;
+    letter-spacing: -0.01em;
+}
+
+.session-preview {
+    font-family: var(--font);
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+}
+
+.session-tags {
+    margin-top: 0.5rem;
+    display: flex;
+    gap: 0.3rem;
+    flex-wrap: wrap;
+}
+
+.session-tag {
+    font-family: var(--font);
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: rgba(0,0,0,0.04);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* ============================================
+   Bottom Notch (home indicator)
+   ============================================ */
+.bottom-notch {
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem 0 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.bottom-notch-bar {
+    width: 120px;
+    height: 5px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================
+   Streamlit Widget Overrides
+   ============================================ */
+.stButton > button {
+    font-family: var(--font) !important;
+    font-weight: 600 !important;
+    font-size: 0.8rem !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(0,0,0,0.1) !important;
+    background: rgba(255,255,255,0.55) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    color: var(--text-primary) !important;
+    padding: 0.55rem 1.3rem !important;
+    transition: all 0.2s !important;
+}
+
+.stButton > button:hover {
+    background: rgba(255,255,255,0.75) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+}
+
+.stDownloadButton > button {
+    font-family: var(--font) !important;
+    font-weight: 600 !important;
+    font-size: 0.8rem !important;
+    border-radius: 999px !important;
+    background: rgba(10,10,14,0.85) !important;
+    color: white !important;
+    border: none !important;
+    padding: 0.55rem 1.3rem !important;
+    transition: all 0.2s !important;
+}
+
+.stDownloadButton > button:hover {
+    background: #000 !important;
+}
+
+.stTextInput > div > div > input,
+.stNumberInput > div > div > input,
+.stTextArea > div > div > textarea {
+    background: rgba(255,255,255,0.5) !important;
+    backdrop-filter: var(--blur) !important;
+    -webkit-backdrop-filter: var(--blur) !important;
+    border: 1px solid rgba(0,0,0,0.06) !important;
+    border-radius: var(--radius-sm) !important;
+    color: var(--text-primary) !important;
+    font-family: var(--font) !important;
+    font-size: 0.92rem !important;
+    padding: 0.65rem 1rem !important;
+}
+
+.stTextInput > div > div > input:focus,
+.stTextArea > div > div > textarea:focus {
+    border-color: var(--accent-blue) !important;
+    box-shadow: 0 0 0 3px rgba(10,132,255,0.1) !important;
+}
+
+.stTextInput > label, .stTextArea > label,
+.stNumberInput > label, .stFileUploader > label {
+    font-family: var(--font) !important;
+    color: var(--text-secondary) !important;
+    font-weight: 500 !important;
+    font-size: 0.82rem !important;
+}
+
+.stCheckbox label {
+    color: var(--text-secondary) !important;
+    font-family: var(--font) !important;
+}
+
+.stAlert {
+    background: var(--chrome-surface) !important;
+    backdrop-filter: var(--blur) !important;
+    border: 1px solid var(--chrome-border) !important;
+    border-radius: var(--radius-sm) !important;
+}
+
+.stCaption, [data-testid="stCaption"] {
+    color: var(--text-muted) !important;
+    font-family: var(--mono) !important;
+    font-size: 0.78rem !important;
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 768px) {
+    .hero-title { font-size: 4rem; }
+    .hero-sub { font-size: 1rem; }
+    .record-panel { padding: 1.5rem; }
+    .transcript-card { padding: 1.5rem; }
+    .section-header { font-size: 1.3rem; }
+}
+
+@media (max-width: 600px) {
+    .hero-title { font-size: 3rem; }
+}

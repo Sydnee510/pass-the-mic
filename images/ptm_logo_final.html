@@ -1,0 +1,170 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+  padding: 2.5rem 1rem;
+}
+.preview-row {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+.swatch-bg {
+  width: 180px;
+  height: 180px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0,0,0,0.07);
+}
+.swatch-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #888;
+}
+.copy-btn {
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.45rem 1.2rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.12);
+  background: white;
+  cursor: pointer;
+  color: #333;
+  letter-spacing: 0.02em;
+  transition: all 0.15s;
+}
+.copy-btn:hover { background: #111; color: white; border-color: #111; }
+.copy-btn.dark { background: #1a1a1e; color: white; border-color: #1a1a1e; }
+.copy-btn.dark:hover { background: #333; }
+.note {
+  font-size: 0.78rem;
+  color: #888;
+  text-align: center;
+  max-width: 420px;
+  line-height: 1.7;
+}
+</style>
+
+<div class="wrap">
+  <div class="preview-row">
+
+    <!-- Light / Chrome background -->
+    <div class="swatch">
+      <div class="swatch-bg" style="background: linear-gradient(145deg, #d8d8dc, #b8b8bc);">
+        <svg width="90" height="90" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <rect x="52" y="18" width="16" height="36" rx="8" fill="#3c3c42"/>
+          <path d="M36 48 Q36 72 60 72 Q84 72 84 48" fill="none" stroke="#3c3c42" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="60" y1="72" x2="60" y2="85" stroke="#3c3c42" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="46" y1="85" x2="74" y2="85" stroke="#3c3c42" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="16" y1="54" x2="16" y2="64" stroke="#3c3c42" stroke-width="3" stroke-linecap="round" opacity="0.45"/>
+          <line x1="25" y1="46" x2="25" y2="72" stroke="#3c3c42" stroke-width="3" stroke-linecap="round" opacity="0.38"/>
+          <line x1="95" y1="46" x2="95" y2="72" stroke="#3c3c42" stroke-width="3" stroke-linecap="round" opacity="0.38"/>
+          <line x1="104" y1="54" x2="104" y2="64" stroke="#3c3c42" stroke-width="3" stroke-linecap="round" opacity="0.45"/>
+        </svg>
+      </div>
+      <div class="swatch-label">On Chrome Silver</div>
+      <button class="copy-btn" onclick="copySVG('light', this)">Copy SVG</button>
+    </div>
+
+    <!-- Dark background -->
+    <div class="swatch">
+      <div class="swatch-bg" style="background: #1a1a1e;">
+        <svg width="90" height="90" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <rect x="52" y="18" width="16" height="36" rx="8" fill="#8e8e93"/>
+          <path d="M36 48 Q36 72 60 72 Q84 72 84 48" fill="none" stroke="#8e8e93" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="60" y1="72" x2="60" y2="85" stroke="#8e8e93" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="46" y1="85" x2="74" y2="85" stroke="#8e8e93" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="16" y1="54" x2="16" y2="64" stroke="#8e8e93" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+          <line x1="25" y1="46" x2="25" y2="72" stroke="#8e8e93" stroke-width="3" stroke-linecap="round" opacity="0.4"/>
+          <line x1="95" y1="46" x2="95" y2="72" stroke="#8e8e93" stroke-width="3" stroke-linecap="round" opacity="0.4"/>
+          <line x1="104" y1="54" x2="104" y2="64" stroke="#8e8e93" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="swatch-label">On Dark</div>
+      <button class="copy-btn dark" onclick="copySVG('dark', this)">Copy SVG</button>
+    </div>
+
+    <!-- White background -->
+    <div class="swatch">
+      <div class="swatch-bg" style="background: #f5f5f7;">
+        <svg width="90" height="90" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <rect x="52" y="18" width="16" height="36" rx="8" fill="#3c3c42"/>
+          <path d="M36 48 Q36 72 60 72 Q84 72 84 48" fill="none" stroke="#3c3c42" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="60" y1="72" x2="60" y2="85" stroke="#3c3c42" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="46" y1="85" x2="74" y2="85" stroke="#3c3c42" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="16" y1="54" x2="16" y2="64" stroke="#3c3c42" stroke-width="3" stroke-linecap="round" opacity="0.3"/>
+          <line x1="25" y1="46" x2="25" y2="72" stroke="#3c3c42" stroke-width="3" stroke-linecap="round" opacity="0.22"/>
+          <line x1="95" y1="46" x2="95" y2="72" stroke="#3c3c42" stroke-width="3" stroke-linecap="round" opacity="0.22"/>
+          <line x1="104" y1="54" x2="104" y2="64" stroke="#3c3c42" stroke-width="3" stroke-linecap="round" opacity="0.3"/>
+        </svg>
+      </div>
+      <div class="swatch-label">On White / F5</div>
+      <button class="copy-btn" onclick="copySVG('white', this)">Copy SVG</button>
+    </div>
+
+  </div>
+
+  <div class="note">
+    Graphite <strong>#3c3c42</strong> on light · Aluminum <strong>#8e8e93</strong> on dark.<br>
+    The waveform bars fade out symmetrically — quieter at the edges, like a real audio envelope.
+  </div>
+</div>
+
+<script>
+const svgs = {
+  light: `<svg width="64" height="64" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <rect x="52" y="18" width="16" height="36" rx="8" fill="#3c3c42"/>
+  <path d="M36 48 Q36 72 60 72 Q84 72 84 48" fill="none" stroke="#3c3c42" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="60" y1="72" x2="60" y2="85" stroke="#3c3c42" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="46" y1="85" x2="74" y2="85" stroke="#3c3c42" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="16" y1="54" x2="16" y2="64" stroke="#3c3c42" stroke-width="3" stroke-linecap="round" opacity="0.45"/>
+  <line x1="25" y1="46" x2="25" y2="72" stroke="#3c3c42" stroke-width="3" stroke-linecap="round" opacity="0.38"/>
+  <line x1="95" y1="46" x2="95" y2="72" stroke="#3c3c42" stroke-width="3" stroke-linecap="round" opacity="0.38"/>
+  <line x1="104" y1="54" x2="104" y2="64" stroke="#3c3c42" stroke-width="3" stroke-linecap="round" opacity="0.45"/>
+</svg>`,
+  dark: `<svg width="64" height="64" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <rect x="52" y="18" width="16" height="36" rx="8" fill="#8e8e93"/>
+  <path d="M36 48 Q36 72 60 72 Q84 72 84 48" fill="none" stroke="#8e8e93" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="60" y1="72" x2="60" y2="85" stroke="#8e8e93" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="46" y1="85" x2="74" y2="85" stroke="#8e8e93" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="16" y1="54" x2="16" y2="64" stroke="#8e8e93" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+  <line x1="25" y1="46" x2="25" y2="72" stroke="#8e8e93" stroke-width="3" stroke-linecap="round" opacity="0.4"/>
+  <line x1="95" y1="46" x2="95" y2="72" stroke="#8e8e93" stroke-width="3" stroke-linecap="round" opacity="0.4"/>
+  <line x1="104" y1="54" x2="104" y2="64" stroke="#8e8e93" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+</svg>`,
+  white: `<svg width="64" height="64" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <rect x="52" y="18" width="16" height="36" rx="8" fill="#3c3c42"/>
+  <path d="M36 48 Q36 72 60 72 Q84 72 84 48" fill="none" stroke="#3c3c42" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="60" y1="72" x2="60" y2="85" stroke="#3c3c42" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="46" y1="85" x2="74" y2="85" stroke="#3c3c42" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="16" y1="54" x2="16" y2="64" stroke="#3c3c42" stroke-width="3" stroke-linecap="round" opacity="0.3"/>
+  <line x1="25" y1="46" x2="25" y2="72" stroke="#3c3c42" stroke-width="3" stroke-linecap="round" opacity="0.22"/>
+  <line x1="95" y1="46" x2="95" y2="72" stroke="#3c3c42" stroke-width="3" stroke-linecap="round" opacity="0.22"/>
+  <line x1="104" y1="54" x2="104" y2="64" stroke="#3c3c42" stroke-width="3" stroke-linecap="round" opacity="0.3"/>
+</svg>`
+};
+
+function copySVG(variant, btn) {
+  navigator.clipboard.writeText(svgs[variant]).catch(() => {});
+  const orig = btn.textContent;
+  btn.textContent = 'Copied ✓';
+  setTimeout(() => btn.textContent = orig, 1800);
+}
+</script>
