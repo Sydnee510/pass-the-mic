@@ -334,35 +334,71 @@ _, col_main, _ = st.columns([1, 3, 1])
 with col_main:
     upload_label = "Upload a Track" if mode == "Lyrics" else ("Upload an Episode" if mode == "Podcast" else "Upload a Chapter")
 
-    # --- Glass Record Panel (open) ---
-    st.markdown("""
-    <div class="record-panel">
+    # --- Glass Record Panel (using st.container for proper CSS targeting) ---
+    with st.container():
+        st.markdown("""
         <div class="panel-label">
             <span class="status-dot"></span> Record a session
         </div>
         <div class="waveform-area">
-            <div class="waveform-placeholder">
-                <div style="font-size:1.8rem;margin-bottom:0.4rem;opacity:0.25;">🎙</div>
-                <div>Tap the mic to begin recording</div>
+            <div class="waveform-content">
+                <div class="waveform-bars">
+                    <div class="wave-bar" style="height:12px"></div>
+                    <div class="wave-bar" style="height:20px"></div>
+                    <div class="wave-bar" style="height:28px"></div>
+                    <div class="wave-bar" style="height:18px"></div>
+                    <div class="wave-bar" style="height:35px"></div>
+                    <div class="wave-bar" style="height:22px"></div>
+                    <div class="wave-bar" style="height:40px"></div>
+                    <div class="wave-bar" style="height:30px"></div>
+                    <div class="wave-bar" style="height:15px"></div>
+                    <div class="wave-bar" style="height:25px"></div>
+                    <div class="wave-bar" style="height:38px"></div>
+                    <div class="wave-bar" style="height:20px"></div>
+                    <div class="wave-bar" style="height:32px"></div>
+                    <div class="wave-bar" style="height:18px"></div>
+                    <div class="wave-bar" style="height:42px"></div>
+                    <div class="wave-bar" style="height:28px"></div>
+                    <div class="wave-bar" style="height:15px"></div>
+                    <div class="wave-bar" style="height:35px"></div>
+                    <div class="wave-bar" style="height:22px"></div>
+                    <div class="wave-bar" style="height:40px"></div>
+                    <div class="wave-bar" style="height:18px"></div>
+                    <div class="wave-bar" style="height:30px"></div>
+                    <div class="wave-bar" style="height:25px"></div>
+                    <div class="wave-bar" style="height:38px"></div>
+                    <div class="wave-bar" style="height:20px"></div>
+                    <div class="wave-bar" style="height:15px"></div>
+                    <div class="wave-bar" style="height:28px"></div>
+                    <div class="wave-bar" style="height:35px"></div>
+                    <div class="wave-bar" style="height:22px"></div>
+                    <div class="wave-bar" style="height:12px"></div>
+                </div>
+                <div class="waveform-placeholder-text">Tap the mic to begin recording</div>
             </div>
             <div class="timer">0:00</div>
         </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
 
-    # The Streamlit recorder sits inside the controls row
-    st.markdown('<div class="controls-row">', unsafe_allow_html=True)
-    audio_bytes = audio_recorder(
-        text="",
-        recording_color="#ff3b30",
-        neutral_color="#888890",
-        pause_threshold=300,
-    )
-    st.markdown('</div>', unsafe_allow_html=True)
+        # Controls row
+        _, c_reset, c_rec, c_transcribe, _ = st.columns([2, 1, 1, 1, 2])
+        with c_reset:
+            st.markdown('<div style="text-align:center"><span class="btn-secondary">Reset</span></div>', unsafe_allow_html=True)
+        with c_rec:
+            audio_bytes = audio_recorder(
+                text="",
+                recording_color="#ff3b30",
+                neutral_color="#888890",
+                pause_threshold=300,
+            )
+        with c_transcribe:
+            st.markdown('<div style="text-align:center"><span class="btn-transcribe">Transcribe →</span></div>', unsafe_allow_html=True)
 
-    st.markdown('<div class="divider">or</div>', unsafe_allow_html=True)
+        st.markdown('<div class="divider">or</div>', unsafe_allow_html=True)
 
-    st.markdown(f"""
-        <div class="upload-zone-label">
+        # Upload zone
+        st.markdown(f"""
+        <div class="upload-zone-wrapper">
             <div class="upload-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                     <path d="M12 16V4M12 4L8 8M12 4L16 8" stroke="#888890" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -372,16 +408,13 @@ with col_main:
             <p class="upload-title">{upload_label}</p>
             <p class="upload-formats">WAV · MP3 · MP4 · M4A · FLAC · OGG · WEBM · MOV</p>
         </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
 
-    uploaded_file = st.file_uploader(
-        "Audio or video files",
-        type=["wav", "mp3", "mp4", "m4a", "flac", "ogg", "webm", "mov", "avi", "mkv"],
-        label_visibility="collapsed",
-    )
-
-    # Close record panel
-    st.markdown("</div>", unsafe_allow_html=True)
+        uploaded_file = st.file_uploader(
+            "Audio or video files",
+            type=["wav", "mp3", "mp4", "m4a", "flac", "ogg", "webm", "mov", "avi", "mkv"],
+            label_visibility="collapsed",
+        )
 
     # --- Results ---
     if audio_bytes:
