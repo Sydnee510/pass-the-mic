@@ -6,3 +6,8 @@ moviepy
 fastapi
 uvicorn[standard]
 python-multipart
+authlib
+httpx
+itsdangerous
+google-api-python-client
+google-auth

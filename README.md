@@ -1,6 +1,6 @@
 # Pass the Mic
 
-A voice-to-text app for creators — poets, rappers, lyricists, and podcasters. Record or upload audio, get instant transcripts powered by Deepgram's Nova-3 speech-to-text model. Switch between **Lyrics**, **Podcast**, and **Book** modes for a tailored experience.
+A voice-to-text app for creators — poets, rappers, lyricists, podcasters, and writers. Record or upload audio, get instant transcripts powered by Deepgram's Nova-3 speech-to-text model. Switch between **Lyrics**, **Podcast**, and **Book** modes for a tailored experience.
 
 ## Use Cases
 
@@ -11,7 +11,7 @@ Writers and performers often freestyle or workshop lyrics out loud but lose thei
 Podcasters and interviewers can upload episodes and get speaker-labeled transcripts — perfect for show notes, accessibility, clip discovery, and SEO. Name your speakers, tag episodes, and export transcripts as text files.
 
 ### Book Mode
-Read aloud your chapters and manuscripts. Get narrator-ready transcripts with paragraph formatting.
+Authors and writers can read their chapters and manuscripts aloud to get clean, publish-ready transcripts. Whether you're drafting a novel, dictating a memoir, or converting handwritten work into digital text — speak it and get a formatted transcript ready for editing and publishing.
 
 ## Features
 
@@ -22,7 +22,9 @@ Read aloud your chapters and manuscripts. Get narrator-ready transcripts with pa
 - **Episode metadata** — episode number, description, and tags (Podcast mode)
 - **Chapter metadata** — chapter number and title (Book mode)
 - **Transcript export** — download speaker-labeled transcripts as TXT (Podcast mode)
-- **Session library** — saved recordings with audio playback and transcript preview
+- **Google Drive storage** — sessions saved to your personal Drive (no database needed)
+- **Google OAuth** — sign in with Google, each user's files stay private
+- **Session library** — saved recordings with transcript preview
 - **Video support** — upload MP4, MOV, AVI, MKV and audio is extracted automatically
 - **Audio trimming** — trim long files before transcribing
 - **Download** — export your audio files anytime
@@ -49,15 +51,27 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 4. Add your Deepgram API key
-
-Sign up at [console.deepgram.com](https://console.deepgram.com) and grab an API key, then:
+### 4. Configure API keys
 
 ```bash
 cp .env.example .env
 ```
 
-Open `.env` and replace `your_api_key_here` with your actual key.
+Open `.env` and fill in your keys:
+
+- **`DEEPGRAM_API_KEY`** — Sign up at [console.deepgram.com](https://console.deepgram.com) and grab an API key
+- **`GOOGLE_CLIENT_ID`** and **`GOOGLE_CLIENT_SECRET`** — For Google Drive session storage (see below)
+- **`SECRET_KEY`** — Any random string for session encryption
+
+#### Google Drive Setup (for saving sessions)
+
+1. Go to [console.cloud.google.com](https://console.cloud.google.com)
+2. Create a project (or select an existing one)
+3. Enable the **Google Drive API**
+4. Go to **Credentials** > **Create Credentials** > **OAuth 2.0 Client ID**
+5. Set application type to **Web application**
+6. Add `http://localhost:8000/auth/callback` to **Authorized redirect URIs**
+7. Copy your Client ID and Client Secret into `.env`
 
 ### 5. Run the app
 
@@ -86,6 +100,8 @@ Both versions share the same backend logic via `core.py` and the same `recording
 - **FastAPI** + **Uvicorn** — API server (primary frontend)
 - **Streamlit** — legacy frontend
 - **Deepgram SDK** — speech-to-text via the pre-recorded REST API (Nova-3)
+- **Google OAuth 2.0** + **Google Drive API** — user authentication and session storage
+- **Authlib** — OAuth client for Starlette/FastAPI
 - **MediaRecorder API** — in-browser mic recording (FastAPI version)
 - **audio-recorder-streamlit** — in-browser mic recording (Streamlit version)
 - **moviepy** — audio extraction from video files
